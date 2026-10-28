@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 日报</title>
+<style>
+:root{--line:#eceff4;--ink:#101828;--sub:#667085;--brand:#1d4ed8;--chip:#eff6ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+.brand{display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6)}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px}
+.date{font-size:11px;color:#a3a9b5;margin-left:2px}
+#close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
+  cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
+#close:hover{background:#f2f4f7;color:#475467}
+
+nav{flex:none;padding:0 14px 10px}
+.seg{display:flex;background:#f2f4f7;border-radius:10px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;font-size:12px;color:#667085;padding:6px 0;
+  border-radius:8px;cursor:pointer;user-select:none;transition:all .15s}
+.tab:hover{color:#344054}
+.tab.active{background:#fff;color:var(--brand);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+main{flex:1 1 auto;min-height:0;padding:2px 12px 8px;overflow-y:auto;scrollbar-width:thin}
+main::-webkit-scrollbar{width:6px}
+main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
+.card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.card:hover{border-color:#dde2ea}
+.chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
+  padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5}
+.meta a{color:#2563eb;text-decoration:none}
+.meta a:hover{text-decoration:underline}
+details{margin-top:5px}
+summary{list-style:none;cursor:pointer;font-size:11px;color:#0f766e;
+  font-weight:600;padding:2px 0;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
+.v{font-size:11.5px;color:#344054;line-height:1.6}
+
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
+.action{font-size:12px;line-height:1.55;color:#344054}
+.hint{font-size:10.5px;color:#b4bac6;margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>AI 日报</h1>
+    <span class="date" id="date"></span>
+  </div>
+  <button id="close" title="关闭 (Esc)">✕</button>
+</header>
+<nav><div class="seg" id="tabs"></div></nav>
+<main id="pane"></main>
+<footer>
+  <div class="action" id="action"></div>
+  <div class="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+</footer>
+<script>
+const DATA = {
+  "date": "2026-10-26",
+  "action": "把 GitHub Student Pack 的 200+ 学生权益过一遍——这是你现在唯一能一次性拿到的、别人拿不到的算力。",
+  "sections": [
+    {
+      "name": "A 区 · AI 实用情报",
+      "items": [
+        {
+          "tag": "新模型",
+          "title": "MiniMax M3.1 Flash 开源：4280 亿参数、1 元/百万 token",
+          "source": "36氪·智东西",
+          "date": "2026-10-23",
+          "url": "https://www.36kr.com/p/4038403667760257",
+          "details": [
+            { "k": "是什么", "v": "MiniMax 开源 M3.1 Flash 权重：总参数 4280 亿、每 token 激活约 230 亿，支持文本/图像/视频输入、100 万 token 上下文。该模型就是此前 OpenRouter 上匿名霸榜的「太空兔」，72 小时处理超 100 万亿 token。API 输入 1 元/百万 token、输出 4 元，约为 Claude Opus 5 的 1/33 和 1/42。" },
+            { "k": "为什么重要", "v": "它在软件工程测试 DeepSWE v1.1 上拿 73.7%，接近 Opus 5 的 74.0%，但成本低两个数量级。开源权重 + 国产芯片 Day-0 适配，意味着「便宜到可以随便试」的强模型又多了一个。" },
+            { "k": "怎么用 / 我该做什么", "v": "Hugging Face（MiniMaxAI/MiniMax-M3.1-Flash）或魔搭可直接下权重；没显卡就用 API 试。建议拿它做一件你本来舍不得花 token 的事：让它读完整本教材生成习题，或批量改你自己的小项目。" },
+            { "k": "我的判断", "v": "「能和最强模型打平的能力，价格掉 30 倍」这件事今年发生了不止一次。押注方向：把成本当成零来设计你的学习项目，别再用「太贵」当借口。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "Kimi K3.1 Pro 打出价格战后，港股 AI 板块集体回调",
+          "source": "now 财经",
+          "date": "2026-10-26",
+          "url": "https://finance.now.com/news/post.php?id=991100&type=analysis",
+          "details": [
+            { "k": "是什么", "v": "月之暗面 K3.1 Pro（3 万亿参数、全球最大开源模型、价格约为 GPT-6 Astra 的 1/5）发布后，港股 AI 概念股集体下挫：MiniMax 盘中跌约 13%，智谱跌近 5%。市场解读为开源/低价模型正在压缩现有厂商的定价空间。" },
+            { "k": "为什么重要", "v": "这是第一次能直观看到「开源降价」如何传导到资本市场：模型本身不再是护城河，谁的场景和分发强，谁才活得下去。对你择业的含义：别去卷「训练一个更好的基座」，那已经是巨头的资本游戏。" },
+            { "k": "怎么用 / 我该做什么", "v": "把这条当成一次判断力练习：下次看到某家 AI 公司融资，先问一句「它的钱是靠能力赚的，还是靠先发优势和信息差赚的」。" },
+            { "k": "我的判断", "v": "这一轮洗牌里，个人最安全的位置是「把便宜模型用出结果」的那一端——应用、工作流、垂直场景。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "英国投 1 亿英镑建 AI 生物安全实验室，Google/OpenAI/Anthropic 参与",
+          "source": "Business Insider",
+          "date": "2026-10-26",
+          "url": "https://markets.businessinsider.com/news/stocks/uk-launches-100-million-ai-biosecurity-lab-with-google-openai-and-anthropic-1036662703",
+          "details": [
+            { "k": "是什么", "v": "英国宣布出资 1 亿英镑设立 AI 生物安全实验室，Google、OpenAI、Anthropic 参与合作，方向是评估与防范 AI 在生物领域的风险（模型能力评测、滥用防护、安全基线）。" },
+            { "k": "为什么重要", "v": "AI 安全从「公司自律 + 论文讨论」进入「国家出钱、建实体机构、拉头部公司一起做」的阶段。这意味着未来几年会出现一类新岗位：模型评测、红队、AI 治理与合规——门槛不高、缺口很大。" },
+            { "k": "怎么用 / 我该做什么", "v": "如果你对「技术 + 政策」的交叉感兴趣，现在可以做一件小事：找一个开源模型的安全评测榜单，读它怎么设计测试项。这类能力两年后会非常抢手。" },
+            { "k": "我的判断", "v": "安全不是 AI 的刹车，正在变成一个产业。谁先把「评测」当手艺练，谁就占到先手。" }
+          ]
+        },
+        {
+          "tag": "白嫖",
+          "title": "wool-gathering：全网 AI 免费额度/学生福利，每天自动更新",
+          "source": "GitHub",
+          "date": "2026-10-25 更新",
+          "url": "https://github.com/jiuyuan233/wool-gathering",
+          "details": [
+            { "k": "是什么", "v": "一个用 GitHub Actions 每天自动抓取的福利清单：大模型免费试用额度、GPU 免费算力、云厂商代金券、学生优惠（如阿里云高校计划 2026-10-19 至 11-21）、Epic/Steam 限免。README 里直接标出截止日期，还有 SVG 日历。" },
+            { "k": "为什么重要", "v": "免费额度最大的成本是信息过期——你按三个月前的帖子注册，结果全失效。这个仓库每天跑一遍，等于帮你做了筛选。" },
+            { "k": "怎么用 / 我该做什么", "v": "① Star + Watch（只收 Release）；② 每周一扫「未过期」那一段；③ 优先领长期有效的（免费层、学生认证），一次性赠金过期就白搭。" },
+            { "k": "我的判断", "v": "真正值得薅的不是那点 token，是「学生」这个身份窗口——毕业后再也领不到。" }
+          ]
+        },
+        {
+          "tag": "白嫖",
+          "title": "nopaywall：把「免费 AI 额度 / 免费替代品」整理成目录",
+          "source": "小众软件论坛",
+          "date": "2026 年（持续更新）",
+          "url": "https://meta.appinn.net/t/topic/93228/4",
+          "details": [
+            { "k": "是什么", "v": "开发者自荐的目录站，归类整理免费 AI 额度、免费 API，以及「付费工具的免费替代品」（比如某付费写作/绘图工具的开源替代）。论坛帖里有使用说明和更新记录。" },
+            { "k": "为什么重要", "v": "和羊毛清单互补：一个盯「白拿额度」，一个盯「不用付钱也能达成同样目的」。对学生钱包更实用。" },
+            { "k": "怎么用 / 我该做什么", "v": "先看「免费替代品」那一节，把你现在花钱/凑合用的工具替换掉一个，省下的钱拿去买书。" },
+            { "k": "我的判断", "v": "注意：这类目录常夹带推广链接，选工具时以官方文档为准，别把账号密码交给陌生站点。" }
+          ]
+        },
+        {
+          "tag": "新模型",
+          "title": "阶跃 Step 5 Preview 开源：国产芯片全部 0Day 适配",
+          "source": "IT之家",
+          "date": "2026-10-15",
+          "url": "https://m.ithome.com/html/1013663.htm",
+          "details": [
+            { "k": "是什么", "v": "阶跃星辰开放 Step 5 Preview 权重（BF16/FP8 双版本，100 万 token 上下文），在 AI 编程、软件工程、金融等任务上达到前沿水平；华为昇腾、壁仞、沐曦、摩尔线程同日宣布 0Day 支持，昇腾 1024 卡 Atlas 950 超节点同步点亮。" },
+            { "k": "为什么重要", "v": "「开源模型 + 国产算力」正在变成一条完整可用的技术栈。这意味着国内做 AI 应用的成本结构会继续下探，也意味着围绕国产卡做推理优化的人才缺口会扩大。" },
+            { "k": "怎么用 / 我该做什么", "v": "权重在 Hugging Face / ModelScope 上，可用 vLLM 或 SGLang 起一个兼容 OpenAI 接口的服务。没卡的话，至少学会用 vLLM 起本地服务这套流程——面试常问。" },
+            { "k": "我的判断", "v": "日期是 10 月 15 日，不是今天的新闻，但它是这一周国产开源栈最重要的一块拼图，值得补看。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B 区 · 自我成长",
+      "items": [
+        {
+          "tag": "学习科学",
+          "title": "北大团队：高效学习靠「先搭骨架」，不是靠多记碎片",
+          "source": "北京大学新闻网 / Nature Communications",
+          "date": "2026-07-25",
+          "url": "http://news.pku.edu.cn/info/2881/2604191.htm",
+          "details": [
+            { "k": "核心观点", "v": "人脑受「认知有限性」约束，无法像大模型那样靠海量数据硬学。研究发现：先用「枢纽→边缘」（HubToLeaf）的顺序预学习，能在脑内快速搭出一个压缩的知识骨架，之后的零散知识会自动挂到这个骨架上，最终成绩显著更高——三组人学的图片、频次、时长完全一样，只有顺序不同。" },
+            { "k": "为什么对 18 岁的你重要", "v": "这直接否掉「先把教材从头看到尾」的低效做法。同样一本书，先看目录和高频核心概念（枢纽），再补细节（边缘），记忆留存完全不同。这是有脑磁图证据的，不是鸡汤。" },
+            { "k": "今天就能做的动作", "v": "任一新课/新领域，先花 20 分钟只做一件事：画出这门课的 5-8 个「枢纽概念」和它们的关系图，再开始读正文。读完后回头改这张图。" },
+            { "k": "我的判断", "v": "这是本期最值得动手的一条。骨架思维一旦养成，你学任何新东西都会比同学快一截。" }
+          ]
+        },
+        {
+          "tag": "认知",
+          "title": "测试效应 2026 综述：自我测验比反复阅读强，但不是人人有效",
+          "source": "npj Science of Learning",
+          "date": "2026",
+          "url": "https://www.nature.com/articles/s41539-026-00400-2",
+          "details": [
+            { "k": "核心观点", "v": "《npj Science of Learning》综述了近年的 testing effect 研究：主动回忆（合上书自己讲一遍/做题）普遍优于重复阅读；但效果受个体差异影响——语义加工能力弱的 learners 从测试中获益更少，需要先建立理解再做测验。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你现在的复习方式很可能仍是「再看一遍」，那是熟悉感，不是掌握。而这条研究的细节提醒：别在完全没懂的时候硬刷题，先理解再自测。" },
+            { "k": "今天就能做的动作", "v": "把今天学的一节内容，合上书写 5 个问题、自己答一遍；答不出的地方才是你真正要回去读的。" },
+            { "k": "我的判断", "v": "「合上书复述」是性价比最高的学习动作，没有之一。哪怕只做 10 分钟。" }
+          ]
+        },
+        {
+          "tag": "专注",
+          "title": "深度工作：21 世纪的超能力（一篇值得反复读的长文）",
+          "source": "Readdle 博客",
+          "date": "长期可读",
+          "url": "https://readdle.com/zh/blog/deep-work",
+          "details": [
+            { "k": "核心观点", "v": "系统讲 Cal Newport 的 deep work 框架：深度工作＝无干扰的高强度认知活动，能创造不可替代的价值；与之相对的浅层工作（回消息、开会、刷信息）会不断切碎注意力，让你的认知带宽永久性变窄。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你正处在注意力习惯定型期。AI 让「获取答案」变得极其便宜，于是稀缺的变成了「能连续专注两小时」。这项能力现在练，成本最低。" },
+            { "k": "今天就能做的动作", "v": "选一个 90 分钟的时间块，手机放另一个房间（不是静音，是物理隔离），只做一件事。记录你被拉走的次数。" },
+            { "k": "我的判断", "v": "别追求一天 6 小时深度工作，先做到每天 1 小时不断线，坚持一个月。" }
+          ]
+        },
+        {
+          "tag": "专注",
+          "title": "Dan Koe：如何「随时」进入极致专注（可操作的注意力协议）",
+          "source": "知乎专栏（译文）",
+          "date": "2026",
+          "url": "https://zhuanlan.zhihu.com/p/2004992883057505997",
+          "details": [
+            { "k": "核心观点", "v": "博主 Dan Koe 的长文，核心不是「自律」，而是把专注当成一个可被触发的状态：清空未决事项（大脑后台不挂任务）、设定单一意图、用身体状态（睡眠/光照/运动）托住注意力，而不是靠意志力硬扛。" },
+            { "k": "为什么对 18 岁的你重要", "v": "大学生最典型的失败不是不努力，是「坐在桌前 3 小时，实际有效 40 分钟」。把专注当状态设计，比当品格修炼更可控。" },
+            { "k": "今天就能做的动作", "v": "开始前花 3 分钟写下所有让你分心的事（未回的消息、没交的作业），写到纸上——这是清空后台；然后只留一个当前任务。" },
+            { "k": "我的判断", "v": "「清空未决事项」是这个方法里最被低估的一步，很多人专注不了，是因为脑子里挂着 12 件没做的事。" }
+          ]
+        },
+        {
+          "tag": "思维模型",
+          "title": "Evergreen-Notes：一份可长期维护的思维模型清单",
+          "source": "GitHub",
+          "date": "持续更新",
+          "url": "https://github.com/huaminghuangtw/Evergreen-Notes",
+          "details": [
+            { "k": "核心观点", "v": "整理了大量「常青笔记」式思维模型：第一性原理、逆向思维、机会成本、复利、能力圈、二阶思维等，每条都给出简短定义和使用场景，适合当卡片库反复读。" },
+            { "k": "为什么对 18 岁的你重要", "v": "思维模型的价值不在「知道名字」，而在遇到问题时能想起来用。有一份随时能翻的清单，比读十本讲道理的书管用。" },
+            { "k": "今天就能做的动作", "v": "从中挑 3 个模型，各写一句「我最近哪件事可以用它重新想一遍」，写在备忘录里。" },
+            { "k": "我的判断", "v": "建议你 fork 一份自己维护——别人的清单是别人的，自己增删过的才是你的。" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+;
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+$('#date').textContent = DATA.date || '';
+$('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
+
+// 去掉 “A 区 · / B 区 ·” 前缀，只留标题
+const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
+
+const tabs = $('#tabs');
+const pane = $('#pane');
+
+function renderSection(i) {
+  const sec = DATA.sections[i];
+  pane.innerHTML = sec.items.map((it) => `
+    <div class="card">
+      ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
+      <span class="t">${esc(it.title)}</span>
+      <div class="meta">
+        ${esc(it.source)} · ${esc(it.date)}
+        ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
+      </div>
+      <details>
+        <summary>结构化整理</summary>
+        ${(it.details || []).map((d) => `
+          <div class="k">${esc(d.k)}</div>
+          <div class="v">${esc(d.v)}</div>`).join('')}
+        ${it.url ? `<div class="k"><a href="${esc(it.url)}" target="_blank" rel="noreferrer">打开原文阅读 →</a></div>` : ''}
+      </details>
+    </div>`).join('');
+  [...tabs.children].forEach((el, j) => el.classList.toggle('active', i === j));
+  pane.scrollTop = 0;
+}
+
+(DATA.sections || []).forEach((sec, i) => {
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.textContent = cleanName(sec.name);
+  el.onclick = () => renderSection(i);
+  tabs.appendChild(el);
+});
+if (DATA.sections && DATA.sections.length) renderSection(0);
+
+function shut() {
+  window.open('', '_self');
+  window.close();
+  setTimeout(shut, 200);
+}
+$('#close').onclick = shut;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') shut();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const cur = [...tabs.children].findIndex(x => x.classList.contains('active'));
+    const next = e.key === 'ArrowRight' ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.children.length) renderSection(next);
+  }
+});
+</script>
+</body>
+</html>
