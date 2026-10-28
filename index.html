@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>AI 日报 · 往期</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#fff;color:#101828;font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+h1{font-size:13.5px;margin:0;font-weight:600}
+#close{background:none;border:0;font-size:13px;color:#b4bac6;cursor:pointer;padding:5px 7px;border-radius:7px}
+#close:hover{background:#f2f4f7;color:#475467}
+main{flex:1 1 auto;min-height:0;overflow-y:auto;padding:2px 14px 10px}
+.row{display:flex;gap:10px;text-decoration:none;color:inherit;border:1px solid #eceff4;
+  border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.row:hover{border-color:#d6dbe4;background:#fcfcfd}
+.d{font-size:11px;color:#1d4ed8;font-weight:600;white-space:nowrap;padding-top:1px}
+.meta .top{font-size:12.5px;line-height:1.45}
+.sub{font-size:10px;color:#a3a9b5;margin-top:3px}
+.empty{color:#98a2b3;font-size:12px;padding:20px 4px}
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7;font-size:10.5px;color:#b4bac6}
+</style></head>
+<body>
+<header>
+  <h1>往期 · 共 4 期</h1>
+  <button id="close" title="关闭 (Esc)">✕</button>
+</header>
+<main>
+  <a class="row" href="2026-10-28.html">
+    <div class="d">2026-10-28</div>
+    <div class="m">
+      <div class="top">谷歌 DeepMind 发布 Genie 4：打字就能生成能走进去玩的世界</div>
+      <div class="sub">AI 实用情报 5 &#183; 自我成长 5</div>
+    </div>
+  </a>
+  <a class="row" href="2026-10-27.html">
+    <div class="d">2026-10-27</div>
+    <div class="m">
+      <div class="top">GPT-6.1 Terra 上线：价格砍半，电脑操作能力比肩 Astra</div>
+      <div class="sub">AI 实用情报 5 &#183; 自我成长 4</div>
+    </div>
+  </a>
+  <a class="row" href="2026-10-26.html">
+    <div class="d">2026-10-26</div>
+    <div class="m">
+      <div class="top">MiniMax M3.1 Flash 开源：4280 亿参数、1 元/百万 token</div>
+      <div class="sub">AI 实用情报 6 &#183; 自我成长 5</div>
+    </div>
+  </a>
+  <a class="row" href="2026-10-25.html">
+    <div class="d">2026-10-25</div>
+    <div class="m">
+      <div class="top">Kimi K3.1 Pro 发布：3 万亿参数，全球最大开源模型，价格只有 GPT-6 Astra 的 1/5</div>
+      <div class="sub">AI 实用情报 4 &#183; 自我成长 2</div>
+    </div>
+  </a>
+
+</main>
+<footer>点任意一期查看 · 打开后左上角「往期」可返回 · Esc 关闭</footer>
+<script>
+document.getElementById('close').onclick = () => { window.open('', '_self'); window.close(); setTimeout(() => window.close(), 200); };
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { window.open('', '_self'); window.close(); } });
+</script>
+</body></html>
