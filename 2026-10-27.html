@@ -9,13 +9,18 @@
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
   font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
-  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow-x:hidden}
 header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
-.brand{display:flex;align-items:center;gap:8px}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
 .dot{width:7px;height:7px;border-radius:50%;flex:none;
   background:linear-gradient(135deg,#2563eb,#8b5cf6)}
-h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px}
-.date{font-size:11px;color:#a3a9b5;margin-left:2px}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+.date{font-size:11px;color:#a3a9b5}
+.late{font-size:10px;color:#b54708;background:#fffaeb;border:1px solid #fedf89;
+  padding:1px 5px;border-radius:4px;margin-left:2px}
+.hdr-right{display:flex;align-items:center;gap:2px}
+#archive{font-size:11px;color:#667085;text-decoration:none;padding:5px 8px;border-radius:7px}
+#archive:hover{background:#f2f4f7;color:#344054}
 #close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
   cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
 #close:hover{background:#f2f4f7;color:#475467}
@@ -35,8 +40,9 @@ main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
 .card:hover{border-color:#dde2ea}
 .chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
   padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
-.t{font-weight:600;font-size:13px;line-height:1.42;display:inline}
-.meta{margin-top:4px;font-size:10px;color:#a3a9b5}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline;overflow-wrap:anywhere;word-break:break-word}
+.sum{font-size:11.5px;color:#667085;margin-top:4px;line-height:1.5;overflow-wrap:anywhere}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5;overflow-wrap:anywhere}
 .meta a{color:#2563eb;text-decoration:none}
 .meta a:hover{text-decoration:underline}
 details{margin-top:5px}
@@ -46,7 +52,7 @@ summary::-webkit-details-marker{display:none}
 summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
 details[open] summary::before{transform:rotate(90deg)}
 .k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
-.v{font-size:11.5px;color:#344054;line-height:1.6}
+.v{font-size:11.5px;color:#344054;line-height:1.6;overflow-wrap:anywhere;word-break:break-word}
 
 footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
 .action{font-size:12px;line-height:1.55;color:#344054}
@@ -59,14 +65,18 @@ footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
     <span class="dot"></span>
     <h1>AI 日报</h1>
     <span class="date" id="date"></span>
+    <span class="late" id="late" style="display:none"></span>
   </div>
-  <button id="close" title="关闭 (Esc)">✕</button>
+  <div class="hdr-right">
+    <a id="archive" href="index.html" title="往期">往期</a>
+    <button id="close" title="关闭 (Esc)">✕</button>
+  </div>
 </header>
 <nav><div class="seg" id="tabs"></div></nav>
 <main id="pane"></main>
 <footer>
   <div class="action" id="action"></div>
-  <div class="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+  <div class="hint" id="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
 </footer>
 <script>
 const DATA = {
@@ -203,26 +213,39 @@ const DATA = {
   ]
 }
 ;
+const GENERATED = { "time": "17:28:28", "at": "2026-10-28 17:28" };
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 $('#date').textContent = DATA.date || '';
+
+// 补发标记：不在 12:25~12:45 之间生成的，标出实际生成时间
+if (GENERATED && GENERATED.time) {
+  const hh = parseInt(GENERATED.time.slice(0, 2), 10);
+  const mm = parseInt(GENERATED.time.slice(3, 5), 10);
+  const onTime = (hh === 12 && mm >= 25 && mm <= 45);
+  if (!onTime) {
+    var el = $('#late');
+    el.style.display = '';
+    el.textContent = '补发 ' + GENERATED.time;
+  }
+}
+
 $('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
 
-// 去掉 “A 区 · / B 区 ·” 前缀，只留标题
 const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
-
 const tabs = $('#tabs');
 const pane = $('#pane');
 
 function renderSection(i) {
   const sec = DATA.sections[i];
-  pane.innerHTML = sec.items.map((it) => `
+  pane.innerHTML = (sec.items || []).map((it) => `
     <div class="card">
       ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
       <span class="t">${esc(it.title)}</span>
+      ${it.summary ? `<div class="sum">${esc(it.summary)}</div>` : ''}
       <div class="meta">
         ${esc(it.source)} · ${esc(it.date)}
         ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
