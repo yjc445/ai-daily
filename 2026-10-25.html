@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 日报</title>
+<style>
+:root{--line:#eceff4;--ink:#101828;--sub:#667085;--brand:#1d4ed8;--chip:#eff6ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+.brand{display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6)}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px}
+.date{font-size:11px;color:#a3a9b5;margin-left:2px}
+#close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
+  cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
+#close:hover{background:#f2f4f7;color:#475467}
+
+nav{flex:none;padding:0 14px 10px}
+.seg{display:flex;background:#f2f4f7;border-radius:10px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;font-size:12px;color:#667085;padding:6px 0;
+  border-radius:8px;cursor:pointer;user-select:none;transition:all .15s}
+.tab:hover{color:#344054}
+.tab.active{background:#fff;color:var(--brand);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+main{flex:1 1 auto;min-height:0;padding:2px 12px 8px;overflow-y:auto;scrollbar-width:thin}
+main::-webkit-scrollbar{width:6px}
+main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
+.card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.card:hover{border-color:#dde2ea}
+.chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
+  padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5}
+.meta a{color:#2563eb;text-decoration:none}
+.meta a:hover{text-decoration:underline}
+details{margin-top:5px}
+summary{list-style:none;cursor:pointer;font-size:11px;color:#0f766e;
+  font-weight:600;padding:2px 0;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
+.v{font-size:11.5px;color:#344054;line-height:1.6}
+
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
+.action{font-size:12px;line-height:1.55;color:#344054}
+.hint{font-size:10.5px;color:#b4bac6;margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>AI 日报</h1>
+    <span class="date" id="date"></span>
+  </div>
+  <button id="close" title="关闭 (Esc)">✕</button>
+</header>
+<nav><div class="seg" id="tabs"></div></nav>
+<main id="pane"></main>
+<footer>
+  <div class="action" id="action"></div>
+  <div class="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+</footer>
+<script>
+const DATA = {
+  "date": "2026-10-25",
+  "action": "注册 GitHub Student Pack + 开一个 Gemini API key——现在就把学生身份换成能用的算力。",
+  "sections": [
+    {
+      "name": "A 区 · AI 实用情报",
+      "items": [
+        {
+          "tag": "新模型",
+          "title": "Kimi K3.1 Pro 发布：3 万亿参数，全球最大开源模型，价格只有 GPT-6 Astra 的 1/5",
+          "source": "上海证券报",
+          "date": "2026-10-24",
+          "url": "https://finance.sina.com.cn/roll/2026-10-24/doc-iniwhtfy2260238.shtml",
+          "details": [
+            { "k": "是什么", "v": "月之暗面 10 月 24 日凌晨发布 Kimi K3.1 Pro，3 万亿级参数、100 万 token 上下文窗口，多项国际评测综合智能水平已接近闭源头部模型；官方称价格为 GPT-6 Astra 的 1/5，完整模型权重 11 月 4 日前放出。" },
+            { "k": "为什么重要", "v": "“接近闭源最强 + 价格 1/5 + 权重还会开源”三件事叠在一起，意味着你几乎零成本就能拿到一年前要花大钱才有的能力。对个人开发者，这是这一轮最大的红利窗口。" },
+            { "k": "怎么用 / 我该做什么", "v": "今天就用长上下文做一件真事：把一份几十页的 PDF 或一整本教材丢进去，让它输出结构化笔记并与原文对照。11 月 4 日权重放出后，留意本地部署方案——你不用自己跑，但要知道哪些能力已经可以不花钱拥有。" },
+            { "k": "我的判断", "v": "开源追平闭源的速度比你想得快。押“会用模型”，别押“会调某个模型的 API”，否则每次版本迭代都会把你冲一遍。" }
+          ]
+        },
+        {
+          "tag": "白嫖",
+          "title": "2026 免费 API 额度全景：Gemini 长期免费层、GLM-4-Flash 永久免费、学生认证再薅 $100",
+          "source": "腾讯云开发者社区",
+          "date": "2026-04-16 更新",
+          "url": "https://cloud.tencent.cn/developer/article/2655824",
+          "details": [
+            { "k": "是什么", "v": "一份把各家免费额度摊开的清单：Google Gemini 免费层长期有效（60 RPM / 每天 1500 次）；智谱 GLM-4-Flash 不限量免费；DeepSeek 注册送 500 万 token；GitHub Student Pack 学生认证送 $100 Azure 额度（可用于 Azure OpenAI）。" },
+            { "k": "为什么重要", "v": "你现在最缺的不是能力，是动手的燃料。这些额度加起来足够零成本把三五个想法做成能跑的原型，而原型数量直接决定你两年后的竞争力。" },
+            { "k": "怎么用 / 我该做什么", "v": "① 本周完成两件事：注册 GitHub Student Pack、开通 Gemini API key；② 建一个 keys.md 记录每家的额度/过期时间/速率限制——OpenAI 赠金过期不提醒，这是最常见的白扔钱方式。" },
+            { "k": "我的判断", "v": "注意时效：这份清单更新于 4 月，价格和模型名可能已变，具体数字以官方页面为准。免费额度是入场券不是长期方案，重点是把“调 API 做小工具”练成肌肉记忆，别把时间花在反复注册薅新号。" }
+          ]
+        },
+        {
+          "tag": "白嫖",
+          "title": "free-llm-credits：一份持续维护的“哪里还有免费额度”清单（134+ 免费 API）",
+          "source": "GitHub",
+          "date": "2026-08-04 核验",
+          "url": "https://github.com/Moh4696/free-llm-credits",
+          "details": [
+            { "k": "是什么", "v": "社区维护的仓库，收录各平台赠送的 LLM / AI 额度、永久免费层、免费 GPU 算力，每条声明都带可信度标签（是否本人验证过）。同类还有 awesome-freellm-apis（134+ 免费 API，含一键配置到 Claude Code / Cursor / Codex）。" },
+            { "k": "为什么重要", "v": "“白嫖”最大的成本是信息过期。有可信度标签的清单能帮你判断哪条还能用，而不是照着三个月前的帖子注册一堆死链。" },
+            { "k": "怎么用 / 我该做什么", "v": "收藏 + 每月扫一次“新增”部分。优先试“永久免费层”而非“注册送一次性额度”，前者才是能长期跑项目的地基。" },
+            { "k": "我的判断", "v": "这类清单的价值不在“薅到多少”，而在让你建立一张“哪些能力现在免费”的地图——这张地图半年后会重新洗牌。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "NVIDIA 把 AI 工厂做成集装箱：部署周期从 6 个月压到 14 天，智能体安全单独成产品",
+          "source": "NVIDIA 博客",
+          "date": "2026-10-21",
+          "url": "https://blogs.nvidia.cn/blog/gtc-berlin-2026-keynote/",
+          "details": [
+            { "k": "是什么", "v": "GTC 柏林上黄仁勋发布 DSX POD 参考设计——整个 Vera Rubin AI 工厂在集装箱内预集成、到场即插即用，现场部署从 6 个月缩到 14 天；同时推出 OpenShell 智能体参考架构（内核级沙盒 + 最小权限）。" },
+            { "k": "为什么重要", "v": "算力正在变成水电（基础设施化），而智能体的安全与编排被单独拿出来做产品——这说明未来两年最缺的人，是能设计智能体工作流、又能管住它权限边界的人。" },
+            { "k": "怎么用 / 我该做什么", "v": "别只练“写 prompt”。这学期挑一个真实任务（比如自动整理课程资料），把它拆成“模型 + 工具 + 记忆 + 权限”四块自己搭一遍，你会立刻看懂这类新闻在说什么。" },
+            { "k": "我的判断", "v": "离你最近的岗位增量不在“训练模型”，而在“把模型接进具体业务”——这条路上，工程能力 + 领域知识比算法课更值钱。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B 区 · 自我成长",
+      "items": [
+        {
+          "tag": "认知",
+          "title": "短平快时代怎么守住深度：三个能立刻做的反碎片动作",
+          "source": "中国大学生在线",
+          "date": "2026-05-22",
+          "url": "https://xyh.univs.cn/a/xyh_xyh_xhpgzs/260522/2041895.shtml",
+          "details": [
+            { "k": "核心观点", "v": "碎片化信息让你“过目即忘”，速成心态让你在考前突击里反复失败。破解靠三件事：深读原文构建体系、用慢沉淀对抗快浮躁、保持独立判断不被热搜带着走。" },
+            { "k": "为什么对 18 岁的你重要", "v": "这年纪最该积累的不是知识点，是注意力的长度。AI 让获取答案的成本趋近于零，稀缺的变成“能连续想一件事两小时”——这恰恰是 AI 替代不了的。" },
+            { "k": "今天就能做的动作", "v": "① 每天 1 小时无手机深度阅读（长文或书，不许用 AI 总结）；② 每周日写 300 字“这周我真正搞懂了什么”；③ 看到热点先问一句“原始出处是什么”。" },
+            { "k": "我的判断", "v": "这三条坚持一年，比多考几分更能决定你 25 岁站在哪。别追求强度，追求不断线。" }
+          ]
+        },
+        {
+          "tag": "学习方法",
+          "title": "武大“AI 时代第一课”：先思后问、迭代追问、永远复核，还要留一块“无 AI 区”",
+          "source": "武汉大学信息管理学院",
+          "date": "2026-10-14",
+          "url": "https://sim.whu.edu.cn/info/2236/116372.htm",
+          "details": [
+            { "k": "核心观点", "v": "大模型是“被压缩的世界图书馆”，但拥有图书馆不等于拥有判断力：它会一本正经地胡说，也不承担选择的后果。给新生的三条实操建议——建立个人知识库、用 AI 完整做一个项目、刻意保留一块独立思考的“无 AI 区”。" },
+            { "k": "为什么对 18 岁的你重要", "v": "大学四年真正的分水岭不是“会不会用 AI”，而是“用完之后脑子里还剩什么”。定力与判断力，是靠那些没有 AI 参与的时刻长出来的。" },
+            { "k": "今天就能做的动作", "v": "把“先思后问、迭代追问、永远复核”贴在书桌前：提问前先自己写 100 字想法；AI 给的每个关键结论都找原始出处复核一遍；每周设半天完全不碰 AI 的深度工作。" },
+            { "k": "我的判断", "v": "和 AI 协作的正确姿势不是“让它替我想”，而是“让它逼我想得更远”——追问三次，比索要一个答案有用十倍。" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+;
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+$('#date').textContent = DATA.date || '';
+$('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
+
+// 去掉 “A 区 · / B 区 ·” 前缀，只留标题
+const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
+
+const tabs = $('#tabs');
+const pane = $('#pane');
+
+function renderSection(i) {
+  const sec = DATA.sections[i];
+  pane.innerHTML = sec.items.map((it) => `
+    <div class="card">
+      ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
+      <span class="t">${esc(it.title)}</span>
+      <div class="meta">
+        ${esc(it.source)} · ${esc(it.date)}
+        ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
+      </div>
+      <details>
+        <summary>结构化整理</summary>
+        ${(it.details || []).map((d) => `
+          <div class="k">${esc(d.k)}</div>
+          <div class="v">${esc(d.v)}</div>`).join('')}
+        ${it.url ? `<div class="k"><a href="${esc(it.url)}" target="_blank" rel="noreferrer">打开原文阅读 →</a></div>` : ''}
+      </details>
+    </div>`).join('');
+  [...tabs.children].forEach((el, j) => el.classList.toggle('active', i === j));
+  pane.scrollTop = 0;
+}
+
+(DATA.sections || []).forEach((sec, i) => {
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.textContent = cleanName(sec.name);
+  el.onclick = () => renderSection(i);
+  tabs.appendChild(el);
+});
+if (DATA.sections && DATA.sections.length) renderSection(0);
+
+function shut() {
+  window.open('', '_self');
+  window.close();
+  setTimeout(shut, 200);
+}
+$('#close').onclick = shut;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') shut();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const cur = [...tabs.children].findIndex(x => x.classList.contains('active'));
+    const next = e.key === 'ArrowRight' ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.children.length) renderSection(next);
+  }
+});
+</script>
+</body>
+</html>
