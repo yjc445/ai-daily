@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 日报</title>
+<style>
+:root{--line:#eceff4;--ink:#101828;--sub:#667085;--brand:#1d4ed8;--chip:#eff6ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+.brand{display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6)}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px}
+.date{font-size:11px;color:#a3a9b5;margin-left:2px}
+#close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
+  cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
+#close:hover{background:#f2f4f7;color:#475467}
+
+nav{flex:none;padding:0 14px 10px}
+.seg{display:flex;background:#f2f4f7;border-radius:10px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;font-size:12px;color:#667085;padding:6px 0;
+  border-radius:8px;cursor:pointer;user-select:none;transition:all .15s}
+.tab:hover{color:#344054}
+.tab.active{background:#fff;color:var(--brand);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+main{flex:1 1 auto;min-height:0;padding:2px 12px 8px;overflow-y:auto;scrollbar-width:thin}
+main::-webkit-scrollbar{width:6px}
+main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
+.card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.card:hover{border-color:#dde2ea}
+.chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
+  padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5}
+.meta a{color:#2563eb;text-decoration:none}
+.meta a:hover{text-decoration:underline}
+details{margin-top:5px}
+summary{list-style:none;cursor:pointer;font-size:11px;color:#0f766e;
+  font-weight:600;padding:2px 0;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
+.v{font-size:11.5px;color:#344054;line-height:1.6}
+
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
+.action{font-size:12px;line-height:1.55;color:#344054}
+.hint{font-size:10.5px;color:#b4bac6;margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>AI 日报</h1>
+    <span class="date" id="date"></span>
+  </div>
+  <button id="close" title="关闭 (Esc)">✕</button>
+</header>
+<nav><div class="seg" id="tabs"></div></nav>
+<main id="pane"></main>
+<footer>
+  <div class="action" id="action"></div>
+  <div class="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+</footer>
+<script>
+const DATA = {
+  "date": "2026-10-27",
+  "action": "去少数派读那篇「收藏了 1000 个学习方法」——然后删掉你收藏夹里 3 个从没用过的「方法」。",
+  "sections": [
+    {
+      "name": "A 区 · AI 实用情报",
+      "items": [
+        {
+          "tag": "新模型",
+          "title": "GPT-6.1 Terra 上线：价格砍半，电脑操作能力比肩 Astra",
+          "source": "网易科技 / OpenAI API 文档",
+          "date": "2026-10-27",
+          "url": "https://m.163.com/tech/article/LA82N4B800097U7T.html",
+          "details": [
+            { "k": "是什么", "v": "OpenAI 发布 GPT-6.1 Terra 并开始向用户逐步推出（财联社 10/27 亦确认在灰度放量）。据首批报道：价格约为上一档的一半，做电脑操作类任务（点界面、填表、跑流程）的能力接近 Astra，但成本只有它的约 1/10。官方 API 文档已上线，LiteLLM 等网关当天完成 Day 0 支持。" },
+            { "k": "为什么重要", "v": "「会操作电脑」的模型开始变便宜，意味着自动化门槛从「会写代码」降到「会说清任务」。对个人开发者，这是把重复劳动（整理资料、批量填表、抢课抢票之外的正当场景）交给 AI 的第一个可行价位。" },
+            { "k": "怎么用 / 我该做什么", "v": "先看官方模型页确认价格和可用性，再用它做一件「需要在网页上点来点去」的事——比如把教务系统里的课表导出成日历。这是你判断模型是否真的好用的最快方式。" },
+            { "k": "我的判断", "v": "真正的信号不是「更强」，而是「强能力掉到 1/10 价格」。这类降价今年已出现三次，趋势明确：能力会持续变便宜，会用它的人会持续变贵。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "Anthropic 正式递交 IPO 申请：上半年净亏 807 亿美元",
+          "source": "中国金融信息网 / DigitalToday",
+          "date": "2026-10-27",
+          "url": "https://m.cnfin.com/wx/share?url=//m.cnfin.com/gs-lb//zixun/20261027/4486750_1.html",
+          "details": [
+            { "k": "是什么", "v": "Anthropic 已向 SEC 正式提交 IPO 注册文件，被称为「史上最大 IPO」的热门候选；同期披露上半年净亏损约 807 亿美元，同时有千亿级算力订单落地，带动韩国存储龙头股价大涨。" },
+            { "k": "为什么重要", "v": "这是 AI 行业从「烧钱叙事」进入「公开市场检验」的分水岭：以后每季度的财报都会逼着它证明「模型能力能换成收入」。对从业者意味着：未来两年 AI 公司的招聘会更看「能不能直接带来收入」，而不是「模型做得多好」。" },
+            { "k": "怎么用 / 我该做什么", "v": "关注招股书里的「收入构成」那一节（等公开后），它会告诉你钱到底从哪来：API、企业订阅、还是定制项目。这直接对应你该学什么技能。" },
+            { "k": "我的判断", "v": "净亏数字大不代表要完，AI 基建本来就是重资产。但「亏损换增长」的故事，从上市那天起就不好讲了。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "英伟达 30 亿美元入股 Meta，黄仁勋：AI 代理是新运算模式",
+          "source": "星岛头条",
+          "date": "2026-10-27",
+          "url": "https://www.stheadline.com/zh-hans/realtime-finance/3630498/Nvidia%e6%96%a530%e4%ba%bf%e7%be%8e%e5%85%83%e5%85%a5%e8%82%a1Meta-%e6%89%a9%e5%a4%a7Muse%e5%90%88%e4%bd%9c-%e9%bb%84%e4%bb%81%e5%8b%8bAI%e4%bb%a3%e7%90%86%e6%98%af%e6%96%b0%e8%bf%90%e7%ae%97%e6%a8%a1%e5%bc%8f",
+          "details": [
+            { "k": "是什么", "v": "英伟达拟以 30 亿美元认购 Meta 新股，双方扩大在 Meta「Muse」模型上的合作。黄仁勋在评论中把 AI 代理（agent）称为「新的运算模式」，而不只是新功能。" },
+            { "k": "为什么重要", "v": "芯片公司和模型公司互相持股，说明产业在往「垂直整合」走：算力+模型+场景绑成一体。对个人，这是提醒——纯做模型层的位置会越来越少，把模型接进具体场景的位置会越来越多。" },
+            { "k": "怎么用 / 我该做什么", "v": "别只看金额。去看 Muse 到底在做什么任务（是写作、代码还是操作系统级代理），然后想：这类任务里，有没有一个是你每天在做、可以交给 agent 的。" },
+            { "k": "我的判断", "v": "「AI 代理是新的运算模式」这句话值得记住：以后你评价一个模型，不该问「它多聪明」，而是「它能替我完成什么闭环」。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "个人智能体扎堆上线，却没几个 App 愿意开门",
+          "source": "DoNews（转载）",
+          "date": "2026-10-26",
+          "url": "https://www.donews.com/article/detail/8927/108871.html",
+          "details": [
+            { "k": "是什么", "v": "一批手机端个人智能体（能代替你点外卖、订票、回消息）陆续上线，但主流 App 普遍用风控、协议、验证码把「非人类操作」挡在外面。结果是：演示很惊艳，真实场景处处碰壁。" },
+            { "k": "为什么重要", "v": "这是 agent 落地的真实瓶颈——不是模型不够强，而是别人的系统不让你进。这条对你有直接价值：未来两年最值钱的技能之一，是「在封闭系统里把流程跑通」的工程能力（浏览器自动化、逆向、RPA）。" },
+            { "k": "怎么用 / 我该做什么", "v": "学一点 Playwright/Selenium：用它自动登录你自己的课程网站、导出成绩。这是最小的、不违规的自动化训练场。" },
+            { "k": "我的判断", "v": "agent 的胜负手不在模型，在「谁能拿到接口」。这也是为什么大厂都在做自己的超级 App。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "DeepSeek 新版模型单周调用量登顶全球，环比暴增 801%",
+          "source": "36氪",
+          "date": "2026-10（具体日期待核实）",
+          "url": "https://36kr.com/p/4042510353257347",
+          "details": [
+            { "k": "是什么", "v": "36氪报道称 DeepSeek 新版模型单周调用量登顶全球第一，环比增长约 801%。同期还有 vLLM/SGLang 针对新模型做推理优化的消息（性能反超）。" },
+            { "k": "为什么重要", "v": "调用量是最诚实的指标——比榜单更能说明「开发者真的在用」。环比 800% 意味着大量项目在一个月内把主力模型换成了它。对学习者：生态热的地方，教程、踩坑贴、招聘需求都会跟着变多。" },
+            { "k": "怎么用 / 我该做什么", "v": "如果你要做一个小项目，现在用 DeepSeek 系模型的性价比最高（文档多、社区活跃、价格低）。先跑通一个再说别的。" },
+            { "k": "我的判断", "v": "注意这条我只核到标题级，具体数字待核实。但「国产开源模型被大量真实调用」这个方向是确定的。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B 区 · 自我成长",
+      "items": [
+        {
+          "tag": "学习方法",
+          "title": "收藏了 1000 个学习方法，为什么你还是原地踏步",
+          "source": "少数派",
+          "date": "2026",
+          "url": "https://sspai.com/post/101359",
+          "details": [
+            { "k": "核心观点", "v": "作者拆穿「方法论收集癖」：收藏本身会带来「我已经进步了」的错觉，但方法只有在被执行的场景里才有价值。真正的问题不是缺方法，而是你没有一个稳定的、被反复执行的单一流程。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你正处在最容易囤积方法的阶段（收藏夹、B站学习区、各种笔记模板）。这篇文章会帮你省下至少一年：**先用一个方法做满 30 天，再谈优化**。" },
+            { "k": "今天就能做的动作", "v": "打开你的收藏夹，随便挑 3 个「从没用过」的方法，直接删掉。然后只留一个，写下来明天几点做。" },
+            { "k": "我的判断", "v": "本期最推荐。方法论的边际收益在第 1 个和第 2 个之间，之后急剧递减。" }
+          ]
+        },
+        {
+          "tag": "反方法论",
+          "title": "在效率幻觉之外：我的反方法论实践清单",
+          "source": "少数派",
+          "date": "2026",
+          "url": "https://sspai.com/post/106330",
+          "details": [
+            { "k": "核心观点", "v": "作者主动放弃一部分「效率工具」：不追求零秒启动、不追求全流程自动化、不把生活塞进看板。理由是——很多效率优化带来的满足感，本身就在消耗你真正做事的精力。" },
+            { "k": "为什么对 18 岁的你重要", "v": "和上一篇正好互补：先别急着优化，先确认「哪些优化不值得做」。大学四年最大的浪费不是懒，是把时间花在搭建系统上而不是使用系统。" },
+            { "k": "今天就能做的动作", "v": "写下你现在用的工具/系统里，哪个是「搭的时候很爽、用的时候很少」的，今天停用它一周，看会不会真的出问题。" },
+            { "k": "我的判断", "v": "这两篇一起读效果最好：一篇让你少收藏，一篇让你少折腾工具。" }
+          ]
+        },
+        {
+          "tag": "认知",
+          "title": "2026 年最值得练的一种心智能力：把「知道」变成「想清楚」",
+          "source": "Leaderonomics",
+          "date": "2026",
+          "url": "https://www.leaderonomics.com/articles/personal/mental-skill-to-be-wise-in-2026",
+          "details": [
+            { "k": "核心观点", "v": "文章认为信息过载时代真正的稀缺能力是「判断力」：能区分事实与解释、能识别自己的偏见、能在证据不足时保留判断。它把这种能力拆成可练的动作，而不是笼统的「多读书」。" },
+            { "k": "为什么对 18 岁的你重要", "v": "AI 让「获取信息」免费，也让「被错误信息说服」变便宜。你现在建立的分辨习惯，会决定未来十年你被谁牵着走。" },
+            { "k": "今天就能做的动作", "v": "拿今天看到的一条 AI 新闻，写下三行：哪些是事实、哪些是作者的解释、我凭什么相信它。" },
+            { "k": "我的判断", "v": "这三行练习做一个月，比读完一本批判性思维教材更有效。" }
+          ]
+        },
+        {
+          "tag": "书单",
+          "title": "新生季书单：开学适应与大学四年怎么过",
+          "source": "北京物资学院",
+          "date": "2026",
+          "url": "https://news.bwu.edu.cn/info/1021/89221.htm",
+          "details": [
+            { "k": "核心观点", "v": "高校图书馆做的新生书单，主题是「开学适应 + 大学成长地图」，覆盖学习方法、时间管理、心理适应、专业认知几个方向，每本附简短推荐理由。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你现在最缺的不是信息，是**有结构的入口**。一份由图书馆员筛过的书单，比算法推荐靠谱得多，而且免费（图书馆能借到）。" },
+            { "k": "今天就能做的动作", "v": "从书单里挑 1 本，去学校图书馆查有没有馆藏；有就今天借，没有就在微信读书找。" },
+            { "k": "我的判断", "v": "书单本身不值钱，值钱的是「借到 + 读完第一章」这个动作。别停在收藏。" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+;
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+$('#date').textContent = DATA.date || '';
+$('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
+
+// 去掉 “A 区 · / B 区 ·” 前缀，只留标题
+const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
+
+const tabs = $('#tabs');
+const pane = $('#pane');
+
+function renderSection(i) {
+  const sec = DATA.sections[i];
+  pane.innerHTML = sec.items.map((it) => `
+    <div class="card">
+      ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
+      <span class="t">${esc(it.title)}</span>
+      <div class="meta">
+        ${esc(it.source)} · ${esc(it.date)}
+        ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
+      </div>
+      <details>
+        <summary>结构化整理</summary>
+        ${(it.details || []).map((d) => `
+          <div class="k">${esc(d.k)}</div>
+          <div class="v">${esc(d.v)}</div>`).join('')}
+        ${it.url ? `<div class="k"><a href="${esc(it.url)}" target="_blank" rel="noreferrer">打开原文阅读 →</a></div>` : ''}
+      </details>
+    </div>`).join('');
+  [...tabs.children].forEach((el, j) => el.classList.toggle('active', i === j));
+  pane.scrollTop = 0;
+}
+
+(DATA.sections || []).forEach((sec, i) => {
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.textContent = cleanName(sec.name);
+  el.onclick = () => renderSection(i);
+  tabs.appendChild(el);
+});
+if (DATA.sections && DATA.sections.length) renderSection(0);
+
+function shut() {
+  window.open('', '_self');
+  window.close();
+  setTimeout(shut, 200);
+}
+$('#close').onclick = shut;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') shut();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const cur = [...tabs.children].findIndex(x => x.classList.contains('active'));
+    const next = e.key === 'ArrowRight' ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.children.length) renderSection(next);
+  }
+});
+</script>
+</body>
+</html>
