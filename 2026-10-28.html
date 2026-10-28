@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 日报</title>
+<style>
+:root{--line:#eceff4;--ink:#101828;--sub:#667085;--brand:#1d4ed8;--chip:#eff6ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6)}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+.date{font-size:11px;color:#a3a9b5}
+.late{font-size:10px;color:#b54708;background:#fffaeb;border:1px solid #fedf89;
+  padding:1px 5px;border-radius:4px;margin-left:2px}
+.hdr-right{display:flex;align-items:center;gap:2px}
+#archive{font-size:11px;color:#667085;text-decoration:none;padding:5px 8px;border-radius:7px}
+#archive:hover{background:#f2f4f7;color:#344054}
+#close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
+  cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
+#close:hover{background:#f2f4f7;color:#475467}
+
+nav{flex:none;padding:0 14px 10px}
+.seg{display:flex;background:#f2f4f7;border-radius:10px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;font-size:12px;color:#667085;padding:6px 0;
+  border-radius:8px;cursor:pointer;user-select:none;transition:all .15s}
+.tab:hover{color:#344054}
+.tab.active{background:#fff;color:var(--brand);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+main{flex:1 1 auto;min-height:0;padding:2px 12px 8px;overflow-y:auto;scrollbar-width:thin}
+main::-webkit-scrollbar{width:6px}
+main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
+.card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.card:hover{border-color:#dde2ea}
+.chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
+  padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline}
+.sum{font-size:11.5px;color:#667085;margin-top:4px;line-height:1.5}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5}
+.meta a{color:#2563eb;text-decoration:none}
+.meta a:hover{text-decoration:underline}
+details{margin-top:5px}
+summary{list-style:none;cursor:pointer;font-size:11px;color:#0f766e;
+  font-weight:600;padding:2px 0;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
+.v{font-size:11.5px;color:#344054;line-height:1.6}
+
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
+.action{font-size:12px;line-height:1.55;color:#344054}
+.hint{font-size:10.5px;color:#b4bac6;margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>AI 日报</h1>
+    <span class="date" id="date"></span>
+    <span class="late" id="late" style="display:none"></span>
+  </div>
+  <div class="hdr-right">
+    <a id="archive" href="index.html" title="往期">往期</a>
+    <button id="close" title="关闭 (Esc)">✕</button>
+  </div>
+</header>
+<nav><div class="seg" id="tabs"></div></nav>
+<main id="pane"></main>
+<footer>
+  <div class="action" id="action"></div>
+  <div class="hint" id="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+</footer>
+<script>
+const DATA = {
+  "date": "2026-10-28",
+  "action": "读 B 区第一篇写作文，然后手写 200 字——不是为了发出去，是为了想出你自己到底怎么想。",
+  "sections": [
+    {
+      "name": "A 区 · AI 实用情报",
+      "items": [
+        {
+          "tag": "新技术",
+          "title": "谷歌 DeepMind 发布 Genie 4：打字就能生成能走进去玩的世界",
+          "source": "财联社（引 DeepMind 官网）",
+          "date": "2026-10-27",
+          "url": "https://k.sina.com.cn/article_2868676035_aafc85c302001z2n0.html?from=finance",
+          "details": [
+            { "k": "是什么", "v": "谷歌 DeepMind 在官网发布世界模型 Genie 4：输入文字提示即可生成可探索的虚拟世界，能用键盘在里面行走；场景进行中还能继续下指令，实时改天气、加角色。单个模拟环境最长可运行约 2 分钟，是上一代 Genie 3 的两倍。" },
+            { "k": "为什么重要", "v": "世界模型是「让 AI 理解物理世界」的核心组件，也是机器人、自动驾驶、游戏、教学模拟的地基。「实时可交互、时长翻倍」意味着它开始从演示走向可用的沙盒——未来你学任何动态系统（物理、生态、交通），都可能直接走进去试。" },
+            { "k": "怎么用 / 我该做什么", "v": "现在多半还是演示阶段，但值得你关注它的能力边界：进去之后能不能真的改变世界状态。这决定了它是「高级视频生成」还是「可实验的环境」。" },
+            { "k": "我的判断", "v": "如果你未来想做教育、游戏或仿真，这一条是方向锚点：内容会从「看」变成「进入」。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "AMD 向 Meta 投资 10 亿美元，Helios 机架已进 Meta 机房",
+          "source": "财联社",
+          "date": "2026-10-28",
+          "url": "https://k.sina.com.cn/article_2868676035_aafc85c302001z2n0.html?from=finance",
+          "details": [
+            { "k": "是什么", "v": "AMD 10 月 27 日宣布：Helios 机架级方案已在 Meta 投入运行，EPYC 处理器为 Meta 的 Muse AI 智能体提供算力，并对 Muse Spark Open、Muse Glimmer 等模型提供 Day-0 支持；同时将向 Meta 的股票发行投资 10 亿美元。" },
+            { "k": "为什么重要", "v": "这是英伟达之外第一次出现「整机架 + 大模型 Day-0 适配」的真实大客户落地。算力供给从一家独大走向双寡头，会直接压低推理成本——你调用 API 的价格上限，就差在这里被打破。" },
+            { "k": "怎么用 / 我该做什么", "v": "记住一个规律：谁给模型做 Day-0 适配，谁就是在抢生态位。以后看芯片新闻，别只看性能数字，看它「支持了哪些模型」。" },
+            { "k": "我的判断", "v": "对个人开发者是好事：算力竞争越激烈，你能白嫖/低价用到的推理越强。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "SK 海力士 Q3 营业利润率 80%：卖铲子的比挖金的更赚",
+          "source": "财联社",
+          "date": "2026-10-28",
+          "url": "https://k.sina.com.cn/article_2868676035_aafc85c302001z2n0.html?from=finance",
+          "details": [
+            { "k": "是什么", "v": "SK 海力士 2026 财年 Q3 营收 104.62 万亿韩元（同比 +328%，首破 100 万亿），营业利润 83.33 万亿韩元（同比 +632%），营业利润率高达 80%。公司归因于 AI 存储需求推涨价格，HBM4、服务器 DDR5、企业级 SSD 销售放量。同期马斯克称机器人对内存的需求将超过地球其他一切。" },
+            { "k": "为什么重要", "v": "这是本轮 AI 周期最直白的一张财报：模型公司还在巨额亏损（Anthropic 半年亏 807 亿美元），存储厂已经赚到手软。判断一家公司值不值钱，先看它在产业链上有没有定价权。" },
+            { "k": "怎么用 / 我该做什么", "v": "把这条当成一次商业思维训练：写下「AI 产业链上游（芯片/存储/电力）→ 中游（云/模型）→ 下游（应用）」四层，标一下每层现在谁在赚钱。你会立刻明白为什么很多应用公司估值很高但现金很差。" },
+            { "k": "我的判断", "v": "80% 的营业利润率不会永远持续，但「瓶颈在哪，钱就在哪」这条规律永远成立。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "甲骨文把谷歌、OpenAI 的芯片都接进了自家云",
+          "source": "Yonhap Infomax",
+          "date": "2026-10-28",
+          "url": "https://en.infomaxai.com/news/articleView.html?idxno=145414",
+          "details": [
+            { "k": "是什么", "v": "甲骨文（Oracle）宣布在其云平台中整合谷歌与 OpenAI 的芯片，作为 AI 基础设施合作伙伴关系扩展的一部分。此前云厂商基本被英伟达 GPU 独占，甲骨文成了第一家「什么卡都接」的基础设施商。" },
+            { "k": "为什么重要", "v": "云厂商从「卖某家的算力」变成「卖算力中立性」。这对开发者意味着：同一个模型可以在不同芯片上跑，迁移成本下降，价格竞争加剧。" },
+            { "k": "怎么用 / 我该做什么", "v": "如果你是学生，短期用不上，但这条是理解「基础设施生意」的绝佳案例：当上游有多个供应商时，中间商的价值来自「整合能力」而不是「独占资源」。" },
+            { "k": "我的判断", "v": "未来两年，云的价格战会比模型的价格战更猛。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "Naver 拿下 12 万亿韩元 AI 基建合同，股价早盘涨 6%",
+          "source": "韩联社",
+          "date": "2026-10-28",
+          "url": "https://www.yna.co.kr/view/AKR20261028055700008",
+          "details": [
+            { "k": "是什么", "v": "韩国 Naver 签署规模约 12 万亿韩元的 AI 基础设施合同，消息公布后股价早盘一度上涨 6% 以上。" },
+            { "k": "为什么重要", "v": "这是「主权 AI」趋势的又一例：各国不愿把算力和模型完全交给美国公司，于是本土巨头拿到国家级订单。对个人意味着：AI 就业市场正在区域化，中国/韩国/欧洲都有自己的生态和岗位需求。" },
+            { "k": "怎么用 / 我该做什么", "v": "如果你考虑未来出国或进外企，注意这个趋势：本地化生态会创造大量「既懂本地业务又懂 AI」的岗位，这类岗位竞争远小于纯算法岗。" },
+            { "k": "我的判断", "v": "「主权 AI」是未来三年最确定的资本开支来源之一，值得长期跟踪。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B 区 · 自我成长",
+      "items": [
+        {
+          "tag": "写作",
+          "title": "每天写作，仍然会改变你的人生（一篇很短但很硬的文）",
+          "source": "Darius Foroux",
+          "date": "2026",
+          "url": "https://dariusforoux.com/writing-every-day-will-still-change-your-life/",
+          "details": [
+            { "k": "核心观点", "v": "作者的主张很朴素：每天写一点（哪怕 200 字），核心收益不是「练文笔」，而是逼你把模糊的感受变成清晰的想法。写不出来，说明你还没想清楚——写作是思考的检测工具。" },
+            { "k": "为什么对 18 岁的你重要", "v": "AI 时代最稀缺的不是产出文字的能力（那已经免费了），而是「知道自己到底在想什么」。每天 200 字是最便宜的心智训练，且完全无法被 AI 替代——因为那是你的判断。" },
+            { "k": "今天就能做的动作", "v": "今晚睡前写 200 字，只回答一个问题：今天哪件事让我改变了看法？不许用 AI 写，不许润色。" },
+            { "k": "我的判断", "v": "这是我给你的最长期建议：把「每天 200 字」当成刷牙，不追求质量，只追求不断线。" }
+          ]
+        },
+        {
+          "tag": "写作",
+          "title": "写作为什么能抗 AI：The Conversation 的一篇教学观察",
+          "source": "The Conversation",
+          "date": "2026-05",
+          "url": "https://theconversation.com/writing-for-well-being-how-it-could-be-a-new-way-to-teach-the-essay-and-resist-ai-263703",
+          "details": [
+            { "k": "核心观点", "v": "文章讨论：当 AI 能代写作文后，学校该怎么教写作？作者主张转向「为表达与心理健康而写」——写作的价值在于帮学生处理情绪、澄清自我，这部分 AI 替不了，也不该替。" },
+            { "k": "为什么对 18 岁的你重要", "v": "它会帮你回答一个很现实的问题：既然 AI 会写，我为什么还要写？答案是——写给自己的那部分。分清「产出型写作」和「思考型写作」，你就不会被 AI 焦虑绑架。" },
+            { "k": "今天就能做的动作", "v": "挑一件最近让你烦的事，写 10 行，不求解法，只求说清「我到底在烦什么」。" },
+            { "k": "我的判断", "v": "把 AI 用在「产出型写作」，把脑子留给「思考型写作」，这是未来十年最划算的分工。" }
+          ]
+        },
+        {
+          "tag": "学习科学",
+          "title": "间隔提取练习能迁移到新情境吗？2026 年的一项课堂研究",
+          "source": "Memory（期刊）",
+          "date": "2026",
+          "url": "https://www.tandfonline.com/doi/pdf/10.1080/09658211.2026.2733327",
+          "details": [
+            { "k": "核心观点", "v": "研究在真实课堂里检验「间隔 + 提取练习」的效果，重点不是记住多少，而是**能否迁移**到新问题、以及学生的真实体验。结论倾向：间隔提取不仅提升记忆，也改善迁移表现，但需要设计得当才不让学生觉得「白费劲」。" },
+            { "k": "为什么对 18 岁的你重要", "v": "「背了但不会用」是大学里最普遍的失败。这项研究直接指向它：决定你会不会用的，是练习方式，不是练习时长。" },
+            { "k": "今天就能做的动作", "v": "把今天学的一个概念，隔 24 小时后再自测一次（不是当天重复 3 次）。设个手机提醒。" },
+            { "k": "我的判断", "v": "间隔不是玄学，是给遗忘留出空间再捞回来。捞的动作必须是你自己做。" }
+          ]
+        },
+        {
+          "tag": "阅读系统",
+          "title": "十年阅读历程，这是我的阅读工具推荐",
+          "source": "少数派",
+          "date": "2026",
+          "url": "https://sspai.com/post/113567",
+          "details": [
+            { "k": "核心观点", "v": "作者用十年时间迭代阅读工具链：从哪里读（RSS/书/长文）、怎么存（剪藏）、怎么处理（标注→笔记），以及哪些工具最后被淘汰。核心经验是——工具要围绕「输出」设计，而不是围绕「收集」。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你现在最容易掉进的坑是「收集癖」：收藏一堆文章、装一堆软件、从不回看。这篇能帮你少走三年弯路。" },
+            { "k": "今天就能做的动作", "v": "只做一个决定：选一个「唯一入口」（比如 RSS 阅读器），以后所有信息都从那里进，其他渠道一律不存。" },
+            { "k": "我的判断", "v": "阅读系统的终点不是工具，是「每周能产出点什么」。" }
+          ]
+        },
+        {
+          "tag": "阅读系统",
+          "title": "全平台同步阅读与笔记：Kindle + 思源笔记 + 纸间书摘",
+          "source": "少数派",
+          "date": "2026",
+          "url": "https://sspai.com/post/87401",
+          "details": [
+            { "k": "核心观点", "v": "一套具体的「纸质/电子书 → 摘录 → 结构化笔记」工作流：Kindle 划线自动同步、纸间书摘拍照 OCR、思源笔记做双链整理。重点在「划线之后怎么变成自己的东西」。" },
+            { "k": "为什么对 18 岁的你重要", "v": "划线和收藏几乎等于没读。真正产生复利的是「划线 → 一句话转述 → 挂到自己已有的笔记上」。这套流程可以立刻照搬，成本为零。" },
+            { "k": "今天就能做的动作", "v": "从你最近读的一本书里挑 3 条划线，各写一句自己的话（不许抄原文），存到一个文件里。" },
+            { "k": "我的判断", "v": "工具选哪个不重要（思源/Notion/备忘录都行），重要的是「转述」这一步不能省。" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+;
+const GENERATED = { "time": "16:38:22", "at": "2026-10-28 16:38" };
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+$('#date').textContent = DATA.date || '';
+
+// 补发标记：不在 12:25~12:45 之间生成的，标出实际生成时间
+if (GENERATED && GENERATED.time) {
+  const hh = parseInt(GENERATED.time.slice(0, 2), 10);
+  const mm = parseInt(GENERATED.time.slice(3, 5), 10);
+  const onTime = (hh === 12 && mm >= 25 && mm <= 45);
+  if (!onTime) {
+    var el = $('#late');
+    el.style.display = '';
+    el.textContent = '补发 ' + GENERATED.time;
+  }
+}
+
+$('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
+
+const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
+const tabs = $('#tabs');
+const pane = $('#pane');
+
+function renderSection(i) {
+  const sec = DATA.sections[i];
+  pane.innerHTML = (sec.items || []).map((it) => `
+    <div class="card">
+      ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
+      <span class="t">${esc(it.title)}</span>
+      ${it.summary ? `<div class="sum">${esc(it.summary)}</div>` : ''}
+      <div class="meta">
+        ${esc(it.source)} · ${esc(it.date)}
+        ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
+      </div>
+      <details>
+        <summary>结构化整理</summary>
+        ${(it.details || []).map((d) => `
+          <div class="k">${esc(d.k)}</div>
+          <div class="v">${esc(d.v)}</div>`).join('')}
+        ${it.url ? `<div class="k"><a href="${esc(it.url)}" target="_blank" rel="noreferrer">打开原文阅读 →</a></div>` : ''}
+      </details>
+    </div>`).join('');
+  [...tabs.children].forEach((el, j) => el.classList.toggle('active', i === j));
+  pane.scrollTop = 0;
+}
+
+(DATA.sections || []).forEach((sec, i) => {
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.textContent = cleanName(sec.name);
+  el.onclick = () => renderSection(i);
+  tabs.appendChild(el);
+});
+if (DATA.sections && DATA.sections.length) renderSection(0);
+
+function shut() {
+  window.open('', '_self');
+  window.close();
+  setTimeout(shut, 200);
+}
+$('#close').onclick = shut;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') shut();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const cur = [...tabs.children].findIndex(x => x.classList.contains('active'));
+    const next = e.key === 'ArrowRight' ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.children.length) renderSection(next);
+  }
+});
+</script>
+</body>
+</html>
