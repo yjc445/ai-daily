@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 日报</title>
+<style>
+:root{--line:#eceff4;--ink:#101828;--sub:#667085;--brand:#1d4ed8;--chip:#eff6ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow-x:hidden}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6)}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+.date{font-size:11px;color:#a3a9b5}
+.late{font-size:10px;color:#b54708;background:#fffaeb;border:1px solid #fedf89;
+  padding:1px 5px;border-radius:4px;margin-left:2px}
+.hdr-right{display:flex;align-items:center;gap:2px}
+#archive{font-size:11px;color:#667085;text-decoration:none;padding:5px 8px;border-radius:7px}
+#archive:hover{background:#f2f4f7;color:#344054}
+#close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
+  cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
+#close:hover{background:#f2f4f7;color:#475467}
+
+nav{flex:none;padding:0 14px 10px}
+.seg{display:flex;background:#f2f4f7;border-radius:10px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;font-size:12px;color:#667085;padding:6px 0;
+  border-radius:8px;cursor:pointer;user-select:none;transition:all .15s}
+.tab:hover{color:#344054}
+.tab.active{background:#fff;color:var(--brand);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+main{flex:1 1 auto;min-height:0;padding:2px 12px 8px;overflow-y:auto;scrollbar-width:thin}
+main::-webkit-scrollbar{width:6px}
+main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
+.card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.card:hover{border-color:#dde2ea}
+.chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
+  padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline;overflow-wrap:anywhere;word-break:break-word}
+.sum{font-size:11.5px;color:#667085;margin-top:4px;line-height:1.5;overflow-wrap:anywhere}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5;overflow-wrap:anywhere}
+.meta a{color:#2563eb;text-decoration:none}
+.meta a:hover{text-decoration:underline}
+details{margin-top:5px}
+summary{list-style:none;cursor:pointer;font-size:11px;color:#0f766e;
+  font-weight:600;padding:2px 0;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
+.v{font-size:11.5px;color:#344054;line-height:1.6;overflow-wrap:anywhere;word-break:break-word}
+
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
+.action{font-size:12px;line-height:1.55;color:#344054}
+.hint{font-size:10.5px;color:#b4bac6;margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>AI 日报</h1>
+    <span class="date" id="date"></span>
+    <span class="late" id="late" style="display:none"></span>
+  </div>
+  <div class="hdr-right">
+    <a id="archive" href="index.html" title="往期">往期</a>
+    <button id="close" title="关闭 (Esc)">✕</button>
+  </div>
+</header>
+<nav><div class="seg" id="tabs"></div></nav>
+<main id="pane"></main>
+<footer>
+  <div class="action" id="action"></div>
+  <div class="hint" id="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+</footer>
+<script>
+const DATA = {
+  "date": "2026-10-29",
+  "action": "花 20 分钟画一张「AI 产业链四层图」（芯片 / 云 / 模型 / 应用），把本周新闻往里填——你会立刻看懂为什么模型登顶的公司反而在跌。",
+  "sections": [
+    {
+      "name": "A 区 · AI 实用情报",
+      "items": [
+        {
+          "tag": "新模型",
+          "title": "Gemini 4 Carbon 登顶全球最强：59 分压过 Opus 5.5，但不开 API",
+          "summary": "能力登顶，却只给审核过的安全防御者用，普通开发者暂时摸不到。",
+          "source": "36氪（凤凰网科技）",
+          "date": "2026-10-29",
+          "url": "https://eu.36kr.com/zh/p/4046614272119681",
+          "details": [
+            { "k": "是什么", "v": "Google DeepMind 发布 Gemini 4 Carbon，在 Artificial Analysis 智能指数 v5.0 得 59 分登顶（Claude Opus 5.5 为 58，GPT-6 Astra 为 57）。三项网络安全基准刷新纪录：漏洞发现 88.2%、漏洞利用验证 54.8%、自动修补 71.0%。介绍期定价输入 2 美元 / 输出 10 美元每百万 token，到期后翻倍到 4 / 20。" },
+            { "k": "为什么重要", "v": "这是「能力更强但更难用」的典型：Carbon 不开放 API，首发只给审核过的安全防御者，再走 Fairwind 计划扩到受信任伙伴。榜单第一不等于你能用上——判断模型价值，除了分数还要看入口开没开。" },
+            { "k": "怎么用 / 我该做什么", "v": "别急着等它。现在能用的还是 Gemini 4 Argon、GPT-6.1 Terra、Claude Opus 5.5 这一档；把 Carbon 记成「安全方向的信号」，不是明天的生产力工具。" },
+            { "k": "我的判断", "v": "模型发布越来越像军备竞赛的公关节奏（距上一代 Argon 只隔两周）。真正决定你体验的是价格和开放性，不是榜首那几个点。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "Alphabet 财报：营收涨 25%，自由现金流连续两季为负",
+          "summary": "一边模型登顶，一边现金流失血，市场用 3000 亿美元市值回答了哪个更重要。",
+          "source": "36氪（凤凰网科技）",
+          "date": "2026-10-29",
+          "url": "https://eu.36kr.com/zh/p/4046614272119681",
+          "details": [
+            { "k": "是什么", "v": "Alphabet 三季度营收 1275.8 亿美元（+25%，低于预期 1282.2 亿），净利 261.7 亿（-25%），自由现金流 -90.7 亿美元（连续第二季为负）。资本开支 513.6 亿（+114%），全年指引 1950-2050 亿；长期债务从 216 亿涨到 1251 亿（+479%）。云业务营收 307.1 亿（+103%）、营业利润 111 亿是唯一亮点；搜索营收 633.5 亿（+12%，较上季 17% 明显放缓）。" },
+            { "k": "为什么重要", "v": "这份财报把行业的结构性矛盾摊开了：模型越强、资本开支越大、现金流越差。而搜索这个基本盘正在被 AI 智能体侵蚀——用户还在搜，但广告贴不上去了。" },
+            { "k": "怎么用 / 我该做什么", "v": "记住一个指标：自由现金流。以后看任何 AI 公司新闻，先问它在烧钱还是在赚钱。这比模型榜单更能预测一家公司两年后的样子。" },
+            { "k": "我的判断", "v": "AI 的商业模式还没跑通，这在 2026 年依然是事实。对个人：别把规划押在某家公司的股价上，押在能力会不会被需要上。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "OpenAI 计划直接采购谷歌 TPU：十六个月内从租到买",
+          "summary": "模型公司和芯片公司开始互相绕开中间商，英伟达的护城河被从侧面撬了一下。",
+          "source": "ZOL 中关村在线",
+          "date": "2026-10-29",
+          "url": "https://ai.zol.com.cn/1266/12661370.html",
+          "details": [
+            { "k": "是什么", "v": "消息称 OpenAI 计划采购谷歌 TPU，合作形态在十六个月内从租赁跃升到直接采购。同期甲骨文也计划把 TPU 引入其云平台，成为第一家什么卡都接的基础设施商。谷歌财报电话会上，TPU 销售已被称为云业务的重要收入来源。" },
+            { "k": "为什么重要", "v": "这打破了英伟达一家独供的格局。算力供给多元化，推理成本继续下探，你调用 API 的价格上限被进一步打开；也说明自研芯片的回报期到了。" },
+            { "k": "怎么用 / 我该做什么", "v": "关注一个信号就够了：你常用的 API 降价时，背后多半是这类新闻在起作用。学会把价格变化和算力新闻连起来看。" },
+            { "k": "我的判断", "v": "算力正在从稀缺资源变成可替换商品，这对开发者是长期利好。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "红杉中国携手宇树成立杉宇·创计划：资本开始买机器人场景",
+          "summary": "具身智能从秀技术进入找落地阶段，钱开始往场景端走。",
+          "source": "新浪财经",
+          "date": "2026-10-28",
+          "url": "https://finance.sina.com.cn/roll/2026-10-28/doc-iniwukpw3425656.shtml",
+          "details": [
+            { "k": "是什么", "v": "红杉中国与宇树科技（Unitree）宣布成立杉宇·创计划，方向是把机器人能力与产业场景结合，用基金加生态的方式孵化落地项目。" },
+            { "k": "为什么重要", "v": "过去两年机器人新闻多是跑跳翻跟头的技术演示，这次是投钱找场景。资本的动作说明：具身智能的瓶颈已经从能不能动，变成卖给谁用。" },
+            { "k": "怎么用 / 我该做什么", "v": "如果你是工科或自动化方向，去查这个计划招什么样的项目和人才；如果不是，也值得观察哪些行业会最先被改造（仓储、巡检、餐饮）。" },
+            { "k": "我的判断", "v": "机器人赛道的钱会越来越集中在能交付场景的团队，而不是能演示动作的团队。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "BIS 把 AI 投资列为金融稳定风险：8000 亿美元资本开支背后是债",
+          "summary": "五大巨头今年资本开支约 8000 亿，发债创纪录，评级机构开始讨价还价。",
+          "source": "36氪（凤凰网科技）",
+          "date": "2026-10-29",
+          "url": "https://eu.36kr.com/zh/p/4046614272119681",
+          "details": [
+            { "k": "是什么", "v": "摩根士丹利把五大科技巨头 2026 年合计资本开支预测上调到约 8000 亿美元（约为 2025 年的两倍）；高盛预测超大规模云厂商今年发债 4200 亿美元。AI 相关发行人信用利差约 115 个基点，宽于投资级整体的 78 个基点；认购倍数从 2 月近 5 倍降到 7 月 2 倍以下。国际清算银行已把 AI 投资热潮列为威胁全球金融稳定的压力点。" },
+            { "k": "为什么重要", "v": "这是本轮周期最被忽视的风险线：技术没问题，但资本流入速度远超生产率改善速度。一旦融资端收紧，最先被砍的一定是不直接赚钱的项目——包括大量应用层创业公司。" },
+            { "k": "怎么用 / 我该做什么", "v": "两个实际含义：选实习和工作时优先去已经有收入的团队；学技能时优先学能直接省成本或赚钱的（自动化、数据、销售工程）。" },
+            { "k": "我的判断", "v": "泡沫不等于崩盘，但意味着周期性。2027 年英伟达财报会被当成期中大考，值得记在日历上。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B 区 · 自我成长",
+      "items": [
+        {
+          "tag": "笔记方法",
+          "title": "最近我的工作笔记方法整理：从记下来到用得上",
+          "summary": "笔记的价值不在记录，而在写完之后能不能被检索和被复用。",
+          "source": "少数派",
+          "date": "2026-10",
+          "url": "https://sspai.com/post/103712",
+          "details": [
+            { "k": "核心观点", "v": "作者系统整理了自己的工作笔记体系：为什么记、按什么颗粒度记、放在哪里、怎么检索。核心洞察是大部分人的笔记失败不是因为记得少，而是因为输入时没想好输出结构。" },
+            { "k": "为什么对 18 岁的你重要", "v": "大学四年你会记下海量笔记（课堂、读书、项目），但真正复用率通常不到 5%。现在建立可检索的结构，成本最低、收益最长。" },
+            { "k": "今天就能做的动作", "v": "翻出你现有的 10 条笔记，试着不用搜索找出来。找不到的就说明结构有问题——今天给它们补上统一的标题格式和标签。" },
+            { "k": "我的判断", "v": "别急着换工具。先把每条笔记有标题、有标签、能搜到做到，比换三个软件有用。" }
+          ]
+        },
+        {
+          "tag": "笔记方法",
+          "title": "时间加项目的双维度笔记法：解决笔记写了找不到",
+          "summary": "按时间线记事实，按项目归档结论——两套索引，互不干扰。",
+          "source": "少数派",
+          "date": "2026-10",
+          "url": "https://sspai.com/post/103960",
+          "details": [
+            { "k": "核心观点", "v": "作者提出用两个维度组织笔记：时间维度（日志式，记录发生了什么）和项目维度（主题式，沉淀结论与决策）。两者用链接互相指向，既能追溯当时怎么想，也能按主题复用。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你同时有课程、社团、项目、求职四条线。只按科目分类会乱，只按时间记会丢，双维度是最省心的折中。" },
+            { "k": "今天就能做的动作", "v": "建两个文件夹：日志（按日期）和项目（按主题）。今天发生的事写进日志；凡是以后还要用的结论，复制一条进对应项目。" },
+            { "k": "我的判断", "v": "关键动作只有一个：写完日志后多花 30 秒判断这条要不要进项目。多这 30 秒，复用率会翻几倍。" }
+          ]
+        },
+        {
+          "tag": "睡眠科学",
+          "title": "Scientific Reports：空间记忆好坏，跟睡眠里脑区协同有关",
+          "summary": "记忆不是睡够就行，而是睡着时不同脑区的振荡有没有对上节奏。",
+          "source": "Scientific Reports",
+          "date": "2026",
+          "url": "https://www.nature.com/articles/s41598-026-52285-1",
+          "details": [
+            { "k": "核心观点", "v": "研究考察海马—皮层睡眠振荡的区域特异性协同与空间记忆表现的关系：睡眠中这些振荡的协调程度与个体的空间记忆成绩相关。也就是说，记忆巩固是网络同步事件，不只是时长问题。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你可能一直在靠熬夜补时长。这项研究提示：睡眠结构与同步比单纯凑够 7 小时更关键，尤其对需要记结构类知识的人（几何、解剖、地图、代码结构）。" },
+            { "k": "今天就能做的动作", "v": "今晚两件事：睡前一小时不刷短视频（保护入睡阶段的慢波）；把今天最难的那个知识点睡前用 3 分钟默想一遍，让它在睡眠里被重放。" },
+            { "k": "我的判断", "v": "把睡前 3 分钟回顾当成刷手机的替代品，成本几乎为零，可能是性价比最高的记忆技巧。" }
+          ]
+        },
+        {
+          "tag": "睡眠科学",
+          "title": "PNAS：睡眠节律像级联瀑布，托住运动记忆",
+          "summary": "不同频段的睡眠波层层嵌套，任何一层被打断，记忆就掉。",
+          "source": "PNAS",
+          "date": "2026",
+          "url": "https://www.pnas.org/doi/10.1073/pnas.2517454123",
+          "details": [
+            { "k": "核心观点", "v": "研究揭示人类睡眠中慢振荡、纺锤波、涟漪的层级级联支撑运动记忆巩固；在癫痫患者中，异常尖波会劫持这一级联，导致记忆巩固受损。这为睡眠结构决定记忆提供了直接的因果线索。" },
+            { "k": "为什么对 18 岁的你重要", "v": "它解释了为什么睡了 8 小时还是记不住：可能结构被打断了（噪音、蓝光、酒精、碎片化醒来）。练乐器、运动、打字的人都该重视。" },
+            { "k": "今天就能做的动作", "v": "给睡眠加两个保护：固定起床时间（比固定入睡更有效）、卧室彻底遮光。不要用酒精助眠，它会压掉深睡和 REM。" },
+            { "k": "我的判断", "v": "这两篇论文合起来只说一件事：睡眠不是休息，是学习的一部分。把它当必修课，不是可选项。" }
+          ]
+        },
+        {
+          "tag": "学习方法",
+          "title": "神经科学给出的 7 种加速学习法：哪些有证据、哪些是传说",
+          "summary": "把多睡、间隔、提取、运动、专注这些老建议，按证据强度重新排了一次序。",
+          "source": "36氪",
+          "date": "2026",
+          "url": "https://m.36kr.com/p/3646376220216966",
+          "details": [
+            { "k": "核心观点", "v": "文章梳理神经科学视角下真正有效的做法：睡眠巩固、间隔重复、主动提取、适度运动、注意力管理、情绪调节、环境线索，并区分证据强弱——间隔、提取、睡眠是强证据，音乐和部分补剂只是相关研究。" },
+            { "k": "为什么对 18 岁的你重要", "v": "它帮你砍掉 80% 的学习技巧噪音：真正有效的就那么几条，而且全都免费。省下的时间可以用来真的学东西。" },
+            { "k": "今天就能做的动作", "v": "今天就用两条：学完立刻合上书复述（提取）；明天同一时间再复述一次（间隔）。就这两条，坚持两周。" },
+            { "k": "我的判断", "v": "学习方法的边际收益在第 1 到第 2 条之后急剧递减，别做方法收藏家。" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+;
+const GENERATED = { "time": "21:02:07", "at": "2026-10-29 21:02" };
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+$('#date').textContent = DATA.date || '';
+
+// 补发标记：不在 12:25~12:45 之间生成的，标出实际生成时间
+if (GENERATED && GENERATED.time) {
+  const hh = parseInt(GENERATED.time.slice(0, 2), 10);
+  const mm = parseInt(GENERATED.time.slice(3, 5), 10);
+  const onTime = (hh === 12 && mm >= 25 && mm <= 45);
+  if (!onTime) {
+    var el = $('#late');
+    el.style.display = '';
+    el.textContent = '补发 ' + GENERATED.time;
+  }
+}
+
+$('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
+
+const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
+const tabs = $('#tabs');
+const pane = $('#pane');
+
+function renderSection(i) {
+  const sec = DATA.sections[i];
+  pane.innerHTML = (sec.items || []).map((it) => `
+    <div class="card">
+      ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
+      <span class="t">${esc(it.title)}</span>
+      ${it.summary ? `<div class="sum">${esc(it.summary)}</div>` : ''}
+      <div class="meta">
+        ${esc(it.source)} · ${esc(it.date)}
+        ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
+      </div>
+      <details>
+        <summary>结构化整理</summary>
+        ${(it.details || []).map((d) => `
+          <div class="k">${esc(d.k)}</div>
+          <div class="v">${esc(d.v)}</div>`).join('')}
+        ${it.url ? `<div class="k"><a href="${esc(it.url)}" target="_blank" rel="noreferrer">打开原文阅读 →</a></div>` : ''}
+      </details>
+    </div>`).join('');
+  [...tabs.children].forEach((el, j) => el.classList.toggle('active', i === j));
+  pane.scrollTop = 0;
+}
+
+(DATA.sections || []).forEach((sec, i) => {
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.textContent = cleanName(sec.name);
+  el.onclick = () => renderSection(i);
+  tabs.appendChild(el);
+});
+if (DATA.sections && DATA.sections.length) renderSection(0);
+
+function shut() {
+  window.open('', '_self');
+  window.close();
+  setTimeout(shut, 200);
+}
+$('#close').onclick = shut;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') shut();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const cur = [...tabs.children].findIndex(x => x.classList.contains('active'));
+    const next = e.key === 'ArrowRight' ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.children.length) renderSection(next);
+  }
+});
+</script>
+</body>
+</html>
