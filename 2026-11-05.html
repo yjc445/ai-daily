@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 日报</title>
+<style>
+:root{--line:#eceff4;--ink:#101828;--sub:#667085;--brand:#1d4ed8;--chip:#eff6ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow-x:hidden}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6)}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+.date{font-size:11px;color:#a3a9b5}
+.late{font-size:10px;color:#b54708;background:#fffaeb;border:1px solid #fedf89;
+  padding:1px 5px;border-radius:4px;margin-left:2px}
+.hdr-right{display:flex;align-items:center;gap:2px}
+#archive{font-size:11px;color:#667085;text-decoration:none;padding:5px 8px;border-radius:7px}
+#archive:hover{background:#f2f4f7;color:#344054}
+#close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
+  cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
+#close:hover{background:#f2f4f7;color:#475467}
+
+nav{flex:none;padding:0 14px 10px}
+.seg{display:flex;background:#f2f4f7;border-radius:10px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;font-size:12px;color:#667085;padding:6px 0;
+  border-radius:8px;cursor:pointer;user-select:none;transition:all .15s}
+.tab:hover{color:#344054}
+.tab.active{background:#fff;color:var(--brand);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+main{flex:1 1 auto;min-height:0;padding:2px 12px 8px;overflow-y:auto;scrollbar-width:thin}
+main::-webkit-scrollbar{width:6px}
+main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
+.card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.card:hover{border-color:#dde2ea}
+.chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
+  padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline;overflow-wrap:anywhere;word-break:break-word}
+.sum{font-size:11.5px;color:#667085;margin-top:4px;line-height:1.5;overflow-wrap:anywhere}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5;overflow-wrap:anywhere}
+.meta a{color:#2563eb;text-decoration:none}
+.meta a:hover{text-decoration:underline}
+details{margin-top:5px}
+summary{list-style:none;cursor:pointer;font-size:11px;color:#0f766e;
+  font-weight:600;padding:2px 0;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
+.v{font-size:11.5px;color:#344054;line-height:1.6;overflow-wrap:anywhere;word-break:break-word}
+
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
+.action{font-size:12px;line-height:1.55;color:#344054}
+.hint{font-size:10.5px;color:#b4bac6;margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>AI 日报</h1>
+    <span class="date" id="date"></span>
+    <span class="late" id="late" style="display:none"></span>
+  </div>
+  <div class="hdr-right">
+    <a id="archive" href="index.html" title="往期">往期</a>
+    <button id="close" title="关闭 (Esc)">✕</button>
+  </div>
+</header>
+<nav><div class="seg" id="tabs"></div></nav>
+<main id="pane"></main>
+<footer>
+  <div class="action" id="action"></div>
+  <div class="hint" id="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+</footer>
+<script>
+const DATA = {
+  "date": "2026-11-05",
+  "action": "今天把一个你常用的长对话换成「压缩后再问」：先让 AI 把上下文总结成 10 行，再接着聊——省钱且经常更准。",
+  "sections": [
+    {
+      "name": "A 区 · AI 实用情报",
+      "items": [
+        {
+          "tag": "白嫖",
+          "title": "腾讯开源 Hy4：770B 参数、100 万上下文，还能操作电脑",
+          "summary": "开源权重 + 首发五折，是这周最值得上手试的国产模型。",
+          "source": "链捕手",
+          "date": "2026-11-04",
+          "url": "https://www.chaincatcher.com/en/article/2301641",
+          "details": [
+            { "k": "是什么", "v": "腾讯发布混元 Hy4 正式版：770B 参数 MoE、开源权重、100 万 token 上下文；相比几周前的预览版，新增视觉理解与原生「电脑操作」能力。它同时上线腾讯云 TokenHub、WorkBuddy、CodeBuddy、元宝与企业微信，以及 OpenRouter 和 OpenCode，12 月 31 日前五折。" },
+            { "k": "为什么重要", "v": "「开源权重 + 电脑操作 + 百万上下文 + 五折」四件事凑齐，意味着你现在可以白嫖一个能干活的 agent 级模型。加上 11-02 的美团 LongCat、10-31 的 DeepSeek Super-agent，国产开源这一周明显加速。" },
+            { "k": "怎么用 / 我该做什么", "v": "先在 OpenRouter 上按免费/低价额度试 Hy4，拿一件真任务测它：让它读一份长 PDF 并输出结构化表格，或者让它操作一个网页完成重复动作。五折期是试错成本最低的时候。" },
+            { "k": "我的判断", "v": "这一轮国产开源已经不是「便宜版」，而是「场景版」——谁先把 agent 用顺手，谁就吃到这波红利。" }
+          ]
+        },
+        {
+          "tag": "实用",
+          "title": "Cognition 发布 SWE-2 Flash：速度快 3 倍、价格只要 1/5",
+          "summary": "编码 agent 的「经济型」选项出现了，付费用户到 11 月底免费用。",
+          "source": "Unite.AI",
+          "date": "2026-11-04",
+          "url": "https://www.unite.ai/cognition-launches-swe-2-flash-for-faster-lower-cost-coding-agents/",
+          "details": [
+            { "k": "是什么", "v": "Cognition 11 月 4 日发布 SWE-2 Flash：276B 参数（激活 12B）MoE 编码模型，从 Thinking Machines Lab 的 Inkling-Small 后训练而来，速度是旗舰 SWE-2 的 3 倍、价格 1/5。FrontierCode 2.0 得分 24.0（略胜 SWE-2 的 23.8），但 Terminal-Bench 4.0（20.0 vs 27.3）与 DeepSWE 1.1（60.1 vs 73.0）落后。付费 Devin 用户 11 月 30 日前可通过 Desktop 与 CLI 免费用。" },
+            { "k": "为什么重要", "v": "「快 3 倍、便宜 5 倍、部分基准反超」是典型的甜点位：它不适合最难的任务，但适合占你 80% 时间的常规改动。这正是省钱的地方。" },
+            { "k": "怎么用 / 我该做什么", "v": "如果你在用 Devin 或 Cursor，把「改错别字、补测试、重命名、写注释」这类任务切到 Flash 档，把贵模型留给架构决策。一个月能省下大半额度。" },
+            { "k": "我的判断", "v": "编码工具正在分层：贵模型做判断，便宜模型做批量执行。不会分层用的人，永远觉得额度不够。" }
+          ]
+        },
+        {
+          "tag": "省钱",
+          "title": "论文实测：长上下文大多是浪费，压缩后省 6.5–54 倍成本",
+          "summary": "256K 上下文的费用是 16K 的 3.6–7 倍，而准确率几乎没提升。",
+          "source": "arXiv（2611.05306）",
+          "date": "2026-11-04",
+          "url": "https://huggingface.co/papers/2611.05306",
+          "details": [
+            { "k": "是什么", "v": "一篇新论文指出：前沿模型用极短窗口配合两种压缩策略（对话结束压缩 EoCC、单步动作压缩 SAC），可以在 SWE-bench、Terminal-Bench 2.1、LongBench v2 等任务上把准确率保持在完整历史的 -3.7 到 +5.6 个百分点内，同时节省 6.5–54.6 倍成本。论文还量化了：在 256K 上下文下生成长文本，成本是 16K 的 3.6–7 倍。" },
+            { "k": "为什么重要", "v": "这条直接颠覆「上下文越长越好」的直觉：长上下文既贵又容易让模型分心。对你最实际的意义是——同样的任务，换个提问方式能省下大半钱。" },
+            { "k": "怎么用 / 我该做什么", "v": "今天起改一个习惯：长对话超过 20 轮后，让 AI「用 10 行总结当前状态」，开新会话把总结贴进去继续。上下文短、成本低、模型反而更专注。" },
+            { "k": "我的判断", "v": "这是本期最省钱的一条。上下文管理能力，会成为用 AI 的基本功之一。" }
+          ]
+        },
+        {
+          "tag": "技术",
+          "title": "Ai2 新基准打脸前沿模型：长状态跟踪只有 13% 正确率",
+          "summary": "模型能写诗能写代码，但让它跟踪一个变量在长文里怎么变，全军覆没。",
+          "source": "Allen Institute for AI",
+          "date": "2026-11-03",
+          "url": "https://allenai.org/blog/statebench",
+          "details": [
+            { "k": "是什么", "v": "Ai2 发布 StateBench：四级难度的基准，测试模型能否在长文档中跟踪不断变化的变量，从不可变值一直到「按引用赋值」。Gemini 3.8 Flash、Claude Opus 5.5、GPT-6 Sol/Luna、Olmo 3 在简单版上表现良好，但在最长最难的「general finite」任务上准确率跌到 13% 或更低。Ai2 还发现带 Gated DeltaNet 的循环/混合架构能泛化到训练长度之外，而纯 Transformer 无论如何训练都过不了最难那级。" },
+            { "k": "为什么重要", "v": "它划出了当前模型的真实能力边界：擅长「生成」，不擅长「维护状态」。这解释了为什么 agent 做多步任务时容易崩——状态一多就丢。" },
+            { "k": "怎么用 / 我该做什么", "v": "做多步任务时，别指望模型自己记住中间结果。每 3-5 步就让它输出一次当前状态清单（谁等于什么、已完成哪些），把状态外置到文本里。" },
+            { "k": "我的判断", "v": "「外置状态」是目前对抗模型失忆最有效的手段，比任何提示词技巧都稳。" }
+          ]
+        },
+        {
+          "tag": "安全",
+          "title": "Claude 独立发现 Xen 两个虚拟机逃逸零日漏洞",
+          "summary": "一个被攻破的虚拟机就能拿下整台宿主机，而漏洞是 AI 找出来的。",
+          "source": "The Hacker News",
+          "date": "2026-11-05",
+          "url": "https://thehackernews.com/2026/11/xen-hypervisor-flaws-let-one-malicious.html",
+          "details": [
+            { "k": "是什么", "v": "Xen 项目安全公告 XSA-523（11 月 3 日）把 CVE-2026-102703 与 CVE-2026-102704 的发现归功于 Anthropic 的 Claude：这两个 grant-copy 操作缺陷允许恶意虚拟机读写其他虚拟机（含 dom0）的内存，4.6 以后所有版本受影响。XCP-ng 称其严重：单个被攻破的 guest 就能突破隔离接管整台宿主机。另有团队独立复现。" },
+            { "k": "为什么重要", "v": "这是「AI 发现真实高危漏洞」的又一批案例（此前是 EPICS、Chrome、Linux）。意味着漏洞挖掘的产能会大幅上升：防御方要更快打补丁，攻击方也在用同样的工具。" },
+            { "k": "怎么用 / 我该做什么", "v": "如果你用云服务器或虚拟机，检查宿主环境的 Xen/虚拟化版本是否打了补丁；自建 NAS、软路由的也一样。这条对个人不是抽象新闻。" },
+            { "k": "我的判断", "v": "AI 让「找漏洞」变便宜，接下来的两三年，及时打补丁的价值会显著上升。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "苹果把工程师每日 AI 预算从 300 砍到 200 美元",
+          "summary": "连最有钱的公司都在收紧 AI 开支，个人更该学会算这笔账。",
+          "source": "彭博（Mark Gurman）",
+          "date": "2026-11-04",
+          "url": "https://www.bloomberg.com/news/articles/2026-11-04/apple-cuts-internal-ai-usage-budgets-in-move-to-reduce-spending",
+          "details": [
+            { "k": "是什么", "v": "彭博报道：苹果把部分工程师的每日 AI 使用额度从 300 美元下调到 200 美元，并计划进一步降到 100 美元。内部对 AI 工具开支的收紧，引发员工对更大规模裁员的担忧。" },
+            { "k": "为什么重要", "v": "这是一个非常具体的信号：AI 工具的成本已经高到需要被当成「预算项」管理，而不是随便用。行业从「鼓励全员用 AI」转向「控制 AI 支出」，中间只隔了几个月。" },
+            { "k": "怎么用 / 我该做什么", "v": "给自己设一个月度上限（比如 100 元），把任务分成「必须用贵模型」和「便宜模型够用」两类。这是未来职场的基本财务素养。" },
+            { "k": "我的判断", "v": "下一阶段的关键词不是「用不用 AI」，而是「用哪个模型、花多少钱、换来什么」。会算账的人，比会用提示词的人更值钱。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B 区 · 自我成长",
+      "items": [
+        {
+          "tag": "职业判断",
+          "title": "红杉募资 100 亿美元，同时关掉孵化器与 Scouts 计划",
+          "summary": "顶级风投开始收缩，说明「广撒网」的阶段结束了，接下来拼的是判断力。",
+          "source": "TechCrunch",
+          "date": "2026-11-04",
+          "url": "https://techcrunch.com/2026/11/04/sequoia-hits-rewind-undoing-20-years-of-expansion/",
+          "details": [
+            { "k": "核心观点", "v": "红杉资本 11 月 4 日告诉 LP：新募约 100 亿美元，同时关闭 2022 年推出的 Arc 加速器、停掉 2009 年开始的 Scouts 计划、合并早期与成长团队、关闭伦敦办公室。合伙人称要回归「高信念、高选择性的风投」，这是对二十年地理与产品扩张的逆转。" },
+            { "k": "为什么对 18 岁的你重要", "v": "风投收缩最直接影响的是「融资变难 → 创业公司招人变谨慎 → 实习与初级岗位减少」。你未来两年找实习时，会感受到这层寒意；但反过来，这也意味着「能直接创造价值」的岗位更受青睐。" },
+            { "k": "今天就能做的动作", "v": "列一张表：你能拿得出手的三个「可交付成果」（做过的项目、写过的工具、办成的活动）。不是「我会什么」，而是「我做成过什么」。找实习时，这张表比简历有用。" },
+            { "k": "我的判断", "v": "资本退潮期，个人最该积累的是「可验证的成果」，而不是「更多的课程证书」。" }
+          ]
+        },
+        {
+          "tag": "公民与判断",
+          "title": "俄亥俄 14 个城市公投否决数据中心：地方民意开始反击",
+          "summary": "21 项公投里至少 14 个城市通过禁令，55% 反对对 22% 支持。",
+          "source": "Fortune",
+          "date": "2026-11-04",
+          "url": "https://fortune.com/2026/11/04/ohio-data-center-ballot-measures-midterm-elections/",
+          "details": [
+            { "k": "核心观点", "v": "中期选举中，俄亥俄州 18 个城市的 21 项公投里，至少 14 个城市通过了对 AI 数据中心的禁令或限制，叠加已有的 125 个以上地方暂停令。全州民调 55% 反对、22% 支持；盖洛普全国口径约 70% 反对。支持建设的 PAC 在 9-10 月投入至少 254 万美元电视广告。" },
+            { "k": "为什么对 18 岁的你重要", "v": "AI 不只是技术问题，正在变成土地、电力、民意的分配问题。你未来投票、就业、甚至选专业，都会撞上这层现实：技术要落地，先要过社区这一关。" },
+            { "k": "今天就能做的动作", "v": "查一下你学校/家乡附近有没有在建的数据中心，以及它对当地电价/用水的影响报告。这是理解「AI 的代价」最直接的方式。" },
+            { "k": "我的判断", "v": "「AI 基建的地方阻力」会成为未来三年最频繁的产业新闻之一，比模型发布更影响真实进度。" }
+          ]
+        },
+        {
+          "tag": "版权与写作",
+          "title": "欧盟法院顾问：Gemini 的答案可能侵犯出版商权利",
+          "summary": "如果 AI 复述得太像原文、让人不必读原文，就可能构成侵权。",
+          "source": "PPC Land（CJEU Case C-250/25）",
+          "date": "2026-11-04",
+          "url": "https://ppc.land/googles-gemini-can-infringe-press-rights-in-2-ways-eu-court-adviser-says/",
+          "details": [
+            { "k": "核心观点", "v": "在 Case C-250/25（Like Company 诉 Google 爱尔兰）中，欧盟法院总法律顾问 Szpunar 出具意见：Gemini 可能以两种方式侵犯出版商的《数字化单一市场版权指令》第 15(1) 条权利——绕开付费墙等技术措施；或其回答复现文章「独特表达」到读者无需再读原文的程度。事实本身不受保护，受保护的是措辞与结构。顾问意见不具约束力，但通常指导最终判决。" },
+            { "k": "为什么对 18 岁的你重要", "v": "它划出一条判断线：你可以用 AI 概括事实与观点，但别让输出变成「原文的替代品」。这对你写论文、做内容、甚至做笔记都适用。" },
+            { "k": "今天就能做的动作", "v": "检查你的笔记：有多少是「原文句子」的搬运，有多少是「自己的话」。把最近三条改写成自己的表述，并标注来源链接。" },
+            { "k": "我的判断", "v": "「复述得太好也算侵权」这条边界，会改变内容行业的分工。对个人写作者，练自己的表达反而更安全。" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+;
+const GENERATED = { "time": "20:43:03", "at": "2026-11-05 20:43" };
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+$('#date').textContent = DATA.date || '';
+
+// 补发标记：不在 12:25~12:45 之间生成的，标出实际生成时间
+if (GENERATED && GENERATED.time) {
+  const hh = parseInt(GENERATED.time.slice(0, 2), 10);
+  const mm = parseInt(GENERATED.time.slice(3, 5), 10);
+  const onTime = (hh === 12 && mm >= 25 && mm <= 45);
+  if (!onTime) {
+    var el = $('#late');
+    el.style.display = '';
+    el.textContent = '补发 ' + GENERATED.time;
+  }
+}
+
+$('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
+
+const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
+const tabs = $('#tabs');
+const pane = $('#pane');
+
+function renderSection(i) {
+  const sec = DATA.sections[i];
+  pane.innerHTML = (sec.items || []).map((it) => `
+    <div class="card">
+      ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
+      <span class="t">${esc(it.title)}</span>
+      ${it.summary ? `<div class="sum">${esc(it.summary)}</div>` : ''}
+      <div class="meta">
+        ${esc(it.source)} · ${esc(it.date)}
+        ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
+      </div>
+      <details>
+        <summary>结构化整理</summary>
+        ${(it.details || []).map((d) => `
+          <div class="k">${esc(d.k)}</div>
+          <div class="v">${esc(d.v)}</div>`).join('')}
+        ${it.url ? `<div class="k"><a href="${esc(it.url)}" target="_blank" rel="noreferrer">打开原文阅读 →</a></div>` : ''}
+      </details>
+    </div>`).join('');
+  [...tabs.children].forEach((el, j) => el.classList.toggle('active', i === j));
+  pane.scrollTop = 0;
+}
+
+(DATA.sections || []).forEach((sec, i) => {
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.textContent = cleanName(sec.name);
+  el.onclick = () => renderSection(i);
+  tabs.appendChild(el);
+});
+if (DATA.sections && DATA.sections.length) renderSection(0);
+
+function shut() {
+  window.open('', '_self');
+  window.close();
+  setTimeout(shut, 200);
+}
+$('#close').onclick = shut;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') shut();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const cur = [...tabs.children].findIndex(x => x.classList.contains('active'));
+    const next = e.key === 'ArrowRight' ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.children.length) renderSection(next);
+  }
+});
+</script>
+</body>
+</html>
