@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 日报</title>
+<style>
+:root{--line:#eceff4;--ink:#101828;--sub:#667085;--brand:#1d4ed8;--chip:#eff6ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow-x:hidden}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6)}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+.date{font-size:11px;color:#a3a9b5}
+.late{font-size:10px;color:#b54708;background:#fffaeb;border:1px solid #fedf89;
+  padding:1px 5px;border-radius:4px;margin-left:2px}
+.hdr-right{display:flex;align-items:center;gap:2px}
+#archive{font-size:11px;color:#667085;text-decoration:none;padding:5px 8px;border-radius:7px}
+#archive:hover{background:#f2f4f7;color:#344054}
+#close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
+  cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
+#close:hover{background:#f2f4f7;color:#475467}
+
+nav{flex:none;padding:0 14px 10px}
+.seg{display:flex;background:#f2f4f7;border-radius:10px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;font-size:12px;color:#667085;padding:6px 0;
+  border-radius:8px;cursor:pointer;user-select:none;transition:all .15s}
+.tab:hover{color:#344054}
+.tab.active{background:#fff;color:var(--brand);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+main{flex:1 1 auto;min-height:0;padding:2px 12px 8px;overflow-y:auto;scrollbar-width:thin}
+main::-webkit-scrollbar{width:6px}
+main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
+.card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.card:hover{border-color:#dde2ea}
+.chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
+  padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline;overflow-wrap:anywhere;word-break:break-word}
+.sum{font-size:11.5px;color:#667085;margin-top:4px;line-height:1.5;overflow-wrap:anywhere}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5;overflow-wrap:anywhere}
+.meta a{color:#2563eb;text-decoration:none}
+.meta a:hover{text-decoration:underline}
+details{margin-top:5px}
+summary{list-style:none;cursor:pointer;font-size:11px;color:#0f766e;
+  font-weight:600;padding:2px 0;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
+.v{font-size:11.5px;color:#344054;line-height:1.6;overflow-wrap:anywhere;word-break:break-word}
+
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
+.action{font-size:12px;line-height:1.55;color:#344054}
+.hint{font-size:10.5px;color:#b4bac6;margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>AI 日报</h1>
+    <span class="date" id="date"></span>
+    <span class="late" id="late" style="display:none"></span>
+  </div>
+  <div class="hdr-right">
+    <a id="archive" href="index.html" title="往期">往期</a>
+    <button id="close" title="关闭 (Esc)">✕</button>
+  </div>
+</header>
+<nav><div class="seg" id="tabs"></div></nav>
+<main id="pane"></main>
+<footer>
+  <div class="action" id="action"></div>
+  <div class="hint" id="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+</footer>
+<script>
+const DATA = {
+  "date": "2026-11-10",
+  "action": "今天检查一次 Claude Code 的 ~/.claude/settings.local.json，看里面有没有明文密钥；有就把它们挪进环境变量并加进 .gitignore。",
+  "sections": [
+    {
+      "name": "A 区 · AI 实用情报",
+      "items": [
+        {
+          "tag": "新模型",
+          "title": "Anthropic 发布 Fable 5.2 与 Mythos 5.2：千个 agent 30 小时证完费马大定理",
+          "summary": "$8/$40 定价，官方称是「最野心勃勃的开放式技术工作」最强模型。",
+          "source": "Anthropic 官方",
+          "date": "2026-11-09",
+          "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+          "details": [
+            { "k": "是什么", "v": "Anthropic 11 月 9 日发布 Claude Fable 5.2 与 Mythos 5.2，定价每百万 token 输入 8 美元、输出 40 美元。官方称一个 1000 个 Fable 5.2 agent 组成的团队在 30 小时内完整形式化了费马大定理，并在预发布测试中解决了两个关于黑洞与全息对偶的开放理论物理问题。Mythos 5.2 在 CVE 重发现上比 Opus 5.5 多找 10.2% 漏洞；Fable 5.2 在高投入档位以约一半的每任务成本追平 Opus 5.5 的最高分。" },
+            { "k": "为什么重要", "v": "「多个 agent 并行做形式化证明」是 agent 从「写代码」走向「做研究」的标志性事件。对个人，重点不是它多强，而是这种「把一个大问题拆给 N 个 agent」的用法，你现在就能在自己的小项目里模仿。" },
+            { "k": "怎么用 / 我该做什么", "v": "试着把一个任务拆成 5 个可并行的小任务（比如给一个项目写 5 个模块的测试），让多个会话同时跑。先在不用新模型的情况下练这个协作模式。" },
+            { "k": "我的判断", "v": "模型的竞争点正在从「单次回答多好」转向「能否组织成一个工作系统」。会拆分任务的人会明显领先。" }
+          ]
+        },
+        {
+          "tag": "白嫖",
+          "title": "Meta 发布 Muse Ember：每百万 token 0.1 美元，比 Haiku 5.5 便宜三分之二",
+          "summary": "AutomationBench 37.8% 对 Haiku 的 13.9%，价格却是零头。",
+          "source": "Meta Superintelligence Labs",
+          "date": "2026-11-09",
+          "url": "https://research.meta.ai/blog/muse-ember",
+          "details": [
+            { "k": "是什么", "v": "Meta 超级智能实验室 11 月 9 日发布 Muse Ember，定价每百万 token 输入 0.10 美元、输出 0.50 美元，是 Muse 系列的「高并发廉价档」。官方数据：AutomationBench-AA 得 37.8%（Claude Haiku 5.5 为 13.9%、GPT-6 Luna 为 20.2%），Coding Agent Index 46 分（对手为 37 与 31）。支持 100 万 token 上下文、51.2 万输出 token，单一模型处理文本、图像、音频、截图、文档与视频。" },
+            { "k": "为什么重要", "v": "这是目前「便宜 + 多模态 + 长上下文」三合一里价格最狠的一档。对你意味着：那些以前因为贵而不敢跑的任务（批量处理几千条文本、整本 PDF 问答）现在可以放开跑。" },
+            { "k": "怎么用 / 我该做什么", "v": "先做一个小规模测试：挑 20 条你的真实任务，比较 Ember 与你现用模型的输出差异。如果差距可接受，就把批量任务全迁过去。" },
+            { "k": "我的判断", "v": "廉价档模型是今年最被低估的机会——它让「实验次数」这件事变便宜，而实验次数决定你学得多快。" }
+          ]
+        },
+        {
+          "tag": "安全",
+          "title": "Claude Code 的「别再问我」把密钥明文存盘，2,539 个密钥泄露到 GitHub",
+          "summary": "点一次「允许并不再询问」，你的数据库密码就被写进了会被提交的文件。",
+          "source": "The Hacker News（Apiiro 研究）",
+          "date": "2026-11-08",
+          "url": "https://thehackernews.com/2026/11/claude-codes-dont-ask-again-file.html",
+          "details": [
+            { "k": "是什么", "v": "安全公司 Apiiro 披露：Claude Code 的「Yes, and don't ask again」权限会把完整命令（含密码、API key、token）以明文保存到 .claude/settings.local.json，而该文件默认不在 .gitignore 里。扫描 GitHub 上 104,185 个公开副本后发现 1,122 个文件含真实凭据、共 2,539 个不同密钥，覆盖 1,994 个仓库——包括 379 个数据库密码、23 个 AWS 密钥、42 个 GitHub/GitLab/npm token、43 个 SSH 登录。Apiiro 称四份相关报告被机器人自动关闭无回复，一半暴露文件在默认分支上已躺了 217 天以上。" },
+            { "k": "为什么重要", "v": "这是「便利功能的代价」的教科书案例：一次点击换来永久便利，也换来一个明文密钥文件。如果你用 Claude Code 并在 GitHub 上放代码，你现在就有暴露风险。" },
+            { "k": "怎么用 / 我该做什么", "v": "三步：①检查 ~/.claude/settings.local.json 是否有明文密钥；②把它加进项目 .gitignore；③密钥改为环境变量或密钥管理器，并轮换已暴露的。" },
+            { "k": "我的判断", "v": "「默认不安全」是当前 AI 工具的通病。养成「新工具先看它往哪写文件」的习惯，比事后补救便宜得多。" }
+          ]
+        },
+        {
+          "tag": "省钱",
+          "title": "论文：把 agent 的推理轨迹缓存成「可执行产物」，调用成本降 16–291 倍",
+          "summary": "同一类问题反复出现时，不必每次重新推理——把过程编译成程序。",
+          "source": "arXiv（2611.09891，CPU-ARC）",
+          "date": "2026-11-09",
+          "url": "https://huggingface.co/papers/2611.09891",
+          "details": [
+            { "k": "是什么", "v": "CPU-ARC 论文提出「Agentic Reasoning Caches」：把 LLM 的推理轨迹蒸馏成可在 CPU 上执行的原生产物，遇到同类问题族时直接跑缓存而不重新调用模型。作者报告在数学与科学任务上与前沿模型持平，但调用成本低 16–291 倍；这种缓存可解释、可持续训练，并且对输入扰动更鲁棒。" },
+            { "k": "为什么重要", "v": "它把「推理」重新定义为「缓存命中」：重复出现的问题不该每次都花大钱。对你最直接的应用是——把每周都要做的重复任务（整理资料、生成周报、处理表格）写成脚本，让模型只在遇到新情况时才被调用。" },
+            { "k": "怎么用 / 我该做什么", "v": "选一个你每周都让 AI 做一遍的任务，把它的「处理步骤」写成一个小脚本或提示词模板；之后同类任务先走脚本，脚本处理不了再叫模型。" },
+            { "k": "我的判断", "v": "「能用程序解决的别用模型」会成为一种通用省钱策略。这条比任何降价公告都实在。" }
+          ]
+        },
+        {
+          "tag": "隐私",
+          "title": "Gemini 把你的网盘与 Gmail 内容送进人工审核池",
+          "summary": "2023 年「个人内容不人工审核」的承诺被悄悄改掉了，普通提问就能触发。",
+          "source": "GitHub（研究演示）/ Google 支持文档变更",
+          "date": "2026-11-09",
+          "url": "https://github.com/thisisme6598/gemini_files/",
+          "details": [
+            { "k": "是什么", "v": "Google 更新的支持文档推翻了 2023 年的承诺：Gemini 现在会在日常提问中自动读取已连接的 Drive 文件与 Gmail，并把输出路由给人工标注员审核。有研究者演示：一句「我的网费是不是太贵了」就把完整账号与个人身份信息拉了出来。Google 建议用户不要连接含机密信息的应用；文档承认自动脱敏对「姓名 + 位置」组合无效。" },
+            { "k": "为什么重要", "v": "你用 AI 处理个人事务时，默认以为「只有模型在看」。现在多了一环「人也在看」。这直接影响你该不该把成绩单、银行账单、聊天记录直接丢给助手。" },
+            { "k": "怎么用 / 我该做什么", "v": "今天去检查一下账号里的「已连接应用」列表，把不必要的 Drive/Gmail 连接断开；处理敏感文件时改用手动上传并先脱敏（去掉姓名、账号、地址）。" },
+            { "k": "我的判断", "v": "隐私政策的变更永远比功能更新安静。每次看到「改进服务体验」，都该去设置里看一眼。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "Google 第八代 TPU 扩到四款：8tx 保密计算、8i Max 长上下文",
+          "summary": "一年发布四款 TPU，是十多年来最密集的一次——算力供给还在加速。",
+          "source": "Google 官方博客",
+          "date": "2026-11-09",
+          "url": "https://blog.google/innovation-and-ai/infrastructure-and-cloud/global-network/tpu-8i-max-and-8tx/",
+          "details": [
+            { "k": "是什么", "v": "Google 11 月 9 日发布两款第八代 TPU：TPU 8tx（与 TPU 8t 同硅片，搭配第五代 AMD EPYC 做机密计算，硬件级加密，延迟比 8t 最多低 2 倍且几乎无性能损失）与 TPU 8i Max（双芯片封装，算力、SRAM 与 HBM 带宽均翻倍，面向长上下文推理）。四款芯片构成第八代家族，是十多年来 Google 一年内发布最多的一代。Alphabet 盘前涨超 2%。" },
+            { "k": "为什么重要", "v": "「机密计算 + 长上下文」两个方向都在补基础设施的短板：前者让企业敢把敏感数据交给云，后者直接决定长文档类应用的成本。算力供给越细分，API 价格越可能继续下探。" },
+            { "k": "怎么用 / 我该做什么", "v": "个人层面短期用不上，但可以记一个判断：当你看到「长上下文变便宜」的新闻时，多半是这类芯片在起作用。" },
+            { "k": "我的判断", "v": "算力的竞争已经从「谁更强」变成「谁更细分、更便宜、更安全」。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B 区 · 自我成长",
+      "items": [
+        {
+          "tag": "注意力",
+          "title": "欧盟数字公平法案草案：AI 伴侣机器人被点名，最高罚 6% 营收",
+          "summary": "监管第一次把「让人上瘾的设计」和「假装是人的 AI」放在一起管。",
+          "source": "彭博",
+          "date": "2026-11-09",
+          "url": "https://www.bloomberg.com/news/articles/2026-11-09/eu-plans-crackdown-on-addictive-social-media-and-ai-bot-features",
+          "details": [
+            { "k": "核心观点", "v": "彭博报道：欧盟《数字公平法案》草案（11 月 11 日公布）将要求企业允许成年用户关闭「诱导强迫使用」的功能，并明确针对「模拟人际关系以延长使用时长」的 AI 系统。草案列出 10 类操纵性设计（自动播放、连续签到奖励、AI 聊天陪伴等）为黑名单，罚款最高可达全球年营收 6%。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你不能等监管来保护注意力。这份草案等于官方承认：那些让你停不下来的设计是「被故意做出来的」。知道这一点，你就能把它们当对手，而不是当自己的性格缺陷。" },
+            { "k": "今天就能做的动作", "v": "打开手机屏幕使用时间，找出使用时长最高的三个应用，各关掉一个「自动播放 / 连续签到 / 推送提醒」。三天后回看数据。" },
+            { "k": "我的判断", "v": "注意力是这一代人最被系统性开采的资源。把它当资产管理，而不是当意志力问题。" }
+          ]
+        },
+        {
+          "tag": "组织与制衡",
+          "title": "英伟达的治理危机：董事会没人管、没有继任计划",
+          "summary": "全球最值钱的芯片公司，董事会平均任期近 15 年，年报里「继任」出现 0 次。",
+          "source": "Semafor",
+          "date": "2026-11-09",
+          "url": "https://www.semafor.com/article/11/09/2026/with-a-weak-board-and-no-successor-nvidia-confronts-a-governance-crisis",
+          "details": [
+            { "k": "核心观点", "v": "Semafor 分析：黄仁勋「间谍门」暴露了这家全球市值最高芯片公司的治理薄弱——董事会平均任期近 15 年（标普 500 平均的两倍），首席独立董事 77 岁且是律所背景，三位董事从 1993 年公司创立任职至今，无人有国家安全经验。最近一份年报里「继任」出现 0 次（微软为 25 次）；黄仁勋直接管理 50 多名下属，公司没有总裁或 COO。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你可能觉得「治理」离你很远。但你迟早要在一个组织里工作、或自己建一个组织。这条给你的具体教训是：一个靠个人撑起来的系统，看起来效率最高，也最脆弱。" },
+            { "k": "今天就能做的动作", "v": "观察你所在的学生组织/社团：谁是「不可替代的那个人」？如果今天他退出会怎样？写下一句改进建议，下次开会提。" },
+            { "k": "我的判断", "v": "「继任计划」是判断一个组织成熟度的最快指标，比它的业绩更早预示风险。" }
+          ]
+        },
+        {
+          "tag": "产业链",
+          "title": "芯片交期从 8 周拉到 32 周：AI 买家把产能整厂包走",
+          "summary": "Microchip CEO 的原话是「他们进来把整个工厂都占了，把别人挤出去」。",
+          "source": "247WallSt",
+          "date": "2026-11-07",
+          "url": "https://247wallst.com/investing/2026/11/07/the-chip-shortage-is-back-and-microchip-says-ai-customers-are-crowding-everyone-out/",
+          "details": [
+            { "k": "核心观点", "v": "Microchip Technology 股价跌 10%：CEO Steve Sanghi 告诉投资者，AI 客户「进来把整座工厂都占了，把其他人都挤了出去」，标准芯片交期从 4–8 周拉长到 6–32 周，恢复到正常需要约六个月。公司服务 AI 的数据中心业务同比增长 55.7%，2026 年营收约 10 亿美元——正是这股 AI 需求造成了挤压别人的短缺。" },
+            { "k": "为什么对 18 岁的你重要", "v": "这条解释了一个常被忽略的事实：AI 的繁荣会以「别人的短缺」的形式传导到现实——车规芯片、家电、工业设备都可能涨价或延期。看懂传导链条，比记住新闻标题有用。" },
+            { "k": "今天就能做的动作", "v": "练习一次「二次推导」：从这条新闻出发，写下三件会受影响的东西（比如你买电子产品的价格、学校实验室设备采购、某个行业的交付）。"},
+            { "k": "我的判断", "v": "AI 不是独立行业，它正在重新分配所有行业的时间与成本。能推演传导路径的人，判断力会明显更强。" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+;
+const GENERATED = { "time": "20:53:34", "at": "2026-11-10 20:53" };
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+$('#date').textContent = DATA.date || '';
+
+// 补发标记：不在 12:25~12:45 之间生成的，标出实际生成时间
+if (GENERATED && GENERATED.time) {
+  const hh = parseInt(GENERATED.time.slice(0, 2), 10);
+  const mm = parseInt(GENERATED.time.slice(3, 5), 10);
+  const onTime = (hh === 12 && mm >= 25 && mm <= 45);
+  if (!onTime) {
+    var el = $('#late');
+    el.style.display = '';
+    el.textContent = '补发 ' + GENERATED.time;
+  }
+}
+
+$('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
+
+const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
+const tabs = $('#tabs');
+const pane = $('#pane');
+
+function renderSection(i) {
+  const sec = DATA.sections[i];
+  pane.innerHTML = (sec.items || []).map((it) => `
+    <div class="card">
+      ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
+      <span class="t">${esc(it.title)}</span>
+      ${it.summary ? `<div class="sum">${esc(it.summary)}</div>` : ''}
+      <div class="meta">
+        ${esc(it.source)} · ${esc(it.date)}
+        ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
+      </div>
+      <details>
+        <summary>结构化整理</summary>
+        ${(it.details || []).map((d) => `
+          <div class="k">${esc(d.k)}</div>
+          <div class="v">${esc(d.v)}</div>`).join('')}
+        ${it.url ? `<div class="k"><a href="${esc(it.url)}" target="_blank" rel="noreferrer">打开原文阅读 →</a></div>` : ''}
+      </details>
+    </div>`).join('');
+  [...tabs.children].forEach((el, j) => el.classList.toggle('active', i === j));
+  pane.scrollTop = 0;
+}
+
+(DATA.sections || []).forEach((sec, i) => {
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.textContent = cleanName(sec.name);
+  el.onclick = () => renderSection(i);
+  tabs.appendChild(el);
+});
+if (DATA.sections && DATA.sections.length) renderSection(0);
+
+function shut() {
+  window.open('', '_self');
+  window.close();
+  setTimeout(shut, 200);
+}
+$('#close').onclick = shut;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') shut();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const cur = [...tabs.children].findIndex(x => x.classList.contains('active'));
+    const next = e.key === 'ArrowRight' ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.children.length) renderSection(next);
+  }
+});
+</script>
+</body>
+</html>
