@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 日报</title>
+<style>
+:root{--line:#eceff4;--ink:#101828;--sub:#667085;--brand:#1d4ed8;--chip:#eff6ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff;color:var(--ink);font-size:13px;
+  font-family:"Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow-x:hidden}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;padding:14px 15px 9px}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#2563eb,#8b5cf6)}
+h1{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+.date{font-size:11px;color:#a3a9b5}
+.late{font-size:10px;color:#b54708;background:#fffaeb;border:1px solid #fedf89;
+  padding:1px 5px;border-radius:4px;margin-left:2px}
+.hdr-right{display:flex;align-items:center;gap:2px}
+#archive{font-size:11px;color:#667085;text-decoration:none;padding:5px 8px;border-radius:7px}
+#archive:hover{background:#f2f4f7;color:#344054}
+#close{background:none;border:0;font-size:13px;line-height:1;color:#b4bac6;
+  cursor:pointer;padding:5px 7px;border-radius:7px;transition:all .15s}
+#close:hover{background:#f2f4f7;color:#475467}
+
+nav{flex:none;padding:0 14px 10px}
+.seg{display:flex;background:#f2f4f7;border-radius:10px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;font-size:12px;color:#667085;padding:6px 0;
+  border-radius:8px;cursor:pointer;user-select:none;transition:all .15s}
+.tab:hover{color:#344054}
+.tab.active{background:#fff;color:var(--brand);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,24,40,.08)}
+
+main{flex:1 1 auto;min-height:0;padding:2px 12px 8px;overflow-y:auto;scrollbar-width:thin}
+main::-webkit-scrollbar{width:6px}
+main::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:3px}
+.card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.card:hover{border-color:#dde2ea}
+.chip{display:inline-block;background:var(--chip);color:var(--brand);font-size:10px;
+  padding:1px 5px;border-radius:4px;margin-right:6px;position:relative;top:-1px}
+.t{font-weight:600;font-size:13px;line-height:1.42;display:inline;overflow-wrap:anywhere;word-break:break-word}
+.sum{font-size:11.5px;color:#667085;margin-top:4px;line-height:1.5;overflow-wrap:anywhere}
+.meta{margin-top:4px;font-size:10px;color:#a3a9b5;overflow-wrap:anywhere}
+.meta a{color:#2563eb;text-decoration:none}
+.meta a:hover{text-decoration:underline}
+details{margin-top:5px}
+summary{list-style:none;cursor:pointer;font-size:11px;color:#0f766e;
+  font-weight:600;padding:2px 0;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:12px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.k{font-size:11px;font-weight:600;color:#0f766e;margin:9px 0 2px}
+.v{font-size:11.5px;color:#344054;line-height:1.6;overflow-wrap:anywhere;word-break:break-word}
+
+footer{flex:none;padding:9px 16px 11px;border-top:1px solid #f2f4f7}
+.action{font-size:12px;line-height:1.55;color:#344054}
+.hint{font-size:10.5px;color:#b4bac6;margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="dot"></span>
+    <h1>AI 日报</h1>
+    <span class="date" id="date"></span>
+    <span class="late" id="late" style="display:none"></span>
+  </div>
+  <div class="hdr-right">
+    <a id="archive" href="index.html" title="往期">往期</a>
+    <button id="close" title="关闭 (Esc)">✕</button>
+  </div>
+</header>
+<nav><div class="seg" id="tabs"></div></nav>
+<main id="pane"></main>
+<footer>
+  <div class="action" id="action"></div>
+  <div class="hint" id="hint">点标题展开解读 · 点「原文」跳转 · Esc 关闭</div>
+</footer>
+<script>
+const DATA = {
+  "date": "2026-11-22",
+  "action": "今天花 10 分钟查一遍你用的 API 供应商的「数据保留」条款，把不确定的换成承诺不记录的——这周有 3 家被打穿了。",
+  "sections": [
+    {
+      "name": "A 区 · AI 实用情报",
+      "items": [
+        {
+          "tag": "安全",
+          "title": "OpenRouter 一口气下架 3 家推理供应商，125 个端点失去「零保留」资格",
+          "summary": "你发给 API 的 prompt，可能被转卖给上游、被记录、甚至被泄露。",
+          "source": "OpenRouter 官方公告",
+          "date": "2026-11-22",
+          "url": "https://openrouter.ai/blog/announcements/data-processing-incidents-on-inference-providers/",
+          "details": [
+            { "k": "是什么", "v": "OpenRouter 11 月 22 日宣布下架三家推理供应商（Novita、Phala、Together），并移除 125 个端点的「零数据保留（ZDR）」资格。起因是安全公司 Dragos 的金丝雀测试：Novita 被抓到把 MiniMax 的请求转发回 MiniMax；Phala 披露 10 月 21 日至 11 月 8 日的 DeepSeek V4 Flash 暴露窗口；Together 确认 6-7 月发生过 prompt 泄露。OpenRouter 表示将采用该测试方法做持续监控。" },
+            { "k": "为什么重要", "v": "这条对开发者最实际：你以为的「匿名调用」，中间可能经过好几层转售，每一层都可能是泄漏点。你写的代码、上传的资料，都在这个链条里流动。" },
+            { "k": "怎么用 / 我该做什么", "v": "三件事：①查你在用的聚合平台有没有 ZDR 承诺，是否被这次事件波及；②敏感数据（成绩单、病历、私有代码）别走不确定的第三方中转；③自己也能做金丝雀测试——在 prompt 里埋一个唯一标记，之后搜这个标记是否出现在公开语料里。" },
+            { "k": "我的判断", "v": "「零数据保留」目前基本靠自觉，不是技术保证。把它当成营销承诺，而不是安全边界。" }
+          ]
+        },
+        {
+          "tag": "方向",
+          "title": "OpenAI 与富士康合作：在美国共同设计制造 AI 数据中心机架",
+          "summary": "从「买别人的服务器」变成「自己定义机架」，这是垂直整合的下一步。",
+          "source": "Analytics India Magazine",
+          "date": "2026-11-21",
+          "url": "https://analyticsindiamag.com/ai-news-updates/openai-foxconn-partner-to-co-design-ai-data-centre-hardware/",
+          "details": [
+            { "k": "是什么", "v": "OpenAI 与富士康 11 月 20 日宣布多年合作：在美国共同设计并制造多代 AI 数据中心机架。OpenAI 负责定义加速器与系统，富士康负责布线、网络、冷却与供电组件，博通单独供应以太网连接。Altman 称这是「确保 AI 时代核心技术在美国制造」的一步。协议不含采购承诺，但给 OpenAI 早期访问与购买选择权。" },
+            { "k": "为什么重要", "v": "模型公司开始自己定义硬件，意味着它不再只是「买算力的客户」，而是要控制供应链成本。这会进一步压低单位算力成本，也会让「硬件+模型」的绑定更紧。" },
+            { "k": "怎么用 / 我该做什么", "v": "关注一个结果指标：API 价格。模型公司越深入硬件，你的调用单价越可能继续降。把这个当成判断「该不该现在囤额度」的依据。" },
+            { "k": "我的判断", "v": "AI 的竞争已经变成供应链竞争。纯做应用的人，要习惯「底层每半年变一次」。" }
+          ]
+        },
+        {
+          "tag": "算力",
+          "title": "Google 砍掉 20% 博通 TPU 订单，转单联发科",
+          "summary": "自研芯片也在「多供应商化」——连 Google 都不想被单一伙伴绑住。",
+          "source": "StockAnalysis（引郭明錤）",
+          "date": "2026-11-22",
+          "url": "https://stockanalysis.com/news/broadcom-falls-google-tpu-cut-mediatek/",
+          "details": [
+            { "k": "是什么", "v": "天风国际分析师郭明錤 11 月 20 日报告：Google 将 2027 年博通设计的 TPU 8i 订单削减约 100 万颗（约占计划出货的 20%），削减主要落在更贵的 8i Max「Whalefish」型号；同时提高联发科设计的 TPU 8t 出货量。消息公布后博通跌 11.4%，联发科在台北跌约 10%。" },
+            { "k": "为什么重要", "v": "连最有钱的自研芯片公司都在分散供应商，说明「算力供应」的核心诉求是「可控」而不是「最强」。对个人：判断芯片新闻时，看订单流向比看跑分更有信息量。" },
+            { "k": "怎么用 / 我该做什么", "v": "记住这个分析框架：谁拿到订单 → 谁在扩产 → 谁的产能紧张 → 谁涨价。这条链最终决定你买硬件、调 API 的价格。" },
+            { "k": "我的判断", "v": "2026 年的芯片新闻会越来越多是「谁砍单、谁转单」，而不是「谁又发布了新卡」。" }
+          ]
+        },
+        {
+          "tag": "现实成本",
+          "title": "AI 服务器厂商签完合同后又涨价，最高涨 45%",
+          "summary": "内存与 PCB 短缺（memflation）让「合同价」都不作数了。",
+          "source": "金融时报",
+          "date": "2026-11-21",
+          "url": "https://www.ft.com/content/dd2a6594-6146-4ff1-ac8e-54749c1fc99f",
+          "details": [
+            { "k": "是什么", "v": "FT 报道：Dell、HPE、联想、超微在合同签订数月后向 AI 服务器买家要求大幅涨价，部分涨幅高达 45%，原因是内存与 PCB 短缺（业内称 memflation）。HPE 已修改条款，允许在下单到发货之间重新定价。微软、亚马逊、谷歌这类超大规模厂商可以通过资本开支指引消化，而靠固定合同借钱的 neocloud 与矿企则面临最大利润挤压。" },
+            { "k": "为什么重要", "v": "这是「AI 热潮如何传导到普通人」的具体路径：内存涨价会推高手机、笔记本、SSD 的价格，也会让云服务成本上升。你在新闻里看到的芯片战，最终会体现在你买电脑的账单上。" },
+            { "k": "怎么用 / 我该做什么", "v": "如果近期要买电脑或升级内存，现在可能不是好时机（价格还在爬）；如果必须买，优先考虑二手/上一代，避开被 AI 需求挤占的高端型号。" },
+            { "k": "我的判断", "v": "「合同不再神圣」这件事比涨幅更值得警惕——它说明供应链已经紧张到商业规则都在变形。" }
+          ]
+        },
+        {
+          "tag": "实用",
+          "title": "中国要统一 AI token 的计量与计费标准，当成「度电」来管",
+          "summary": "每天 500 万亿 token 的使用量，让「token」正在变成一种公共事业计量单位。",
+          "source": "The Next Web",
+          "date": "2026-11-21",
+          "url": "https://thenextweb.com/news/chinas-data-regulator-plans-standards-for-measuring-and-billing-ai-tokens",
+          "details": [
+            { "k": "是什么", "v": "中国国家数据局局长刘烈宏 11 月 20 日表示，将制定 AI token 的计量、计费与质量检测标准，把 token 当作类似「千瓦时」的公用事业单位来管理。中国日均 token 使用量在 6 月已超过 500 万亿（3 月为 140 万亿），「token 工厂」把算力、模型与数据打包成 token 服务卖给银行与电信运营商。该局称将扩大 token 服务应用、抑制低质量重复，但未给出发布时间。" },
+            { "k": "为什么重要", "v": "计费标准统一后，「哪家更便宜」会变得可比，价格战会更直接；质量分级则意味着低质模型会被标注出来。对个人：以后比较模型时，能看的不只是价格表，还有「每 token 的有效工作量」。" },
+            { "k": "怎么用 / 我该做什么", "v": "现在就先建立自己的「token 账本」：每周记录花在哪些任务上、效果如何。等标准出来，你已经有自己的基线数据了。" },
+            { "k": "我的判断", "v": "把 token 当公用事业管，意味着它正式成为基础设施的一部分。这个类比以后会越来越准。" }
+          ]
+        },
+        {
+          "tag": "趣味",
+          "title": "176KB 的 DOS 程序，让 1981 年的 IBM PC 跑 Claude 写代码",
+          "summary": "4.77MHz、640KB 内存的老机器，通过一台桥接机连上 Claude，驱动 18 个工具。",
+          "source": "ricapar.net（个人博客）",
+          "date": "2026-11-21",
+          "url": "http://ricapar.net/ClawDOS/",
+          "details": [
+            { "k": "是什么", "v": "开发者把 Claude 做成一个 176KB 的 DOS 可执行文件 ClawDOS，跑在 1981 年的 IBM PC XT 上（8088 处理器、4.77MHz、640KB 内存），TLS 由一台桥接 PC 代劳。它把 Claude 接进 18 个工具：文件操作、运行 DOS 程序、Turbo C 编译执行、CGA 截图、内存与 IO 端口、PC 喇叭音乐，对话存在软盘上。作者称 1.3 万行 C/C++ 全部由 Claude 编写。" },
+            { "k": "为什么重要", "v": "这条看似猎奇，其实说明一个关键事实：agent 的门槛不在算力，而在「接口设计」。只要能把工具暴露成清晰的调用，四十年前的机器也能当终端用。" },
+            { "k": "怎么用 / 我该做什么", "v": "把它当成一次「接口思维」的示范：你手里的旧设备（旧手机、树莓派、旧笔记本）都能通过一层薄桥接变成 AI 终端。想想你有什么闲置设备可以复活。" },
+            { "k": "我的判断", "v": "本周最值得看的技术小品。它提醒你：AI 落地靠的不是更强的模型，而是更聪明的接法。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B 区 · 自我成长",
+      "items": [
+        {
+          "tag": "授权与边界",
+          "title": "沃尔玛的 AI 购物代理用量涨 129%，同时推出「Agent 网关」",
+          "summary": "外部 AI 代理想替你下单，得先过「权限 + 限额 + 独立账单」这道门。",
+          "source": "FourWeekMBA",
+          "date": "2026-11-21",
+          "url": "https://fourweekmba.com/ai-walmart-sparky-use-up-129-in-a-year-baskets-40-larger/",
+          "details": [
+            { "k": "核心观点", "v": "沃尔玛披露其 AI 购物助手 Sparky 的美国使用量同比增长 129%，带动的购物篮比普通订单大 40%。同时 CEO 提出「Agent Gateway」框架：外部 AI 代理（包括 Meta 的 Muse）可以接入沃尔玛，但必须使用用户设定的权限、消费限额与独立购买记录。Sparky 已扩展至墨西哥、加拿大与山姆会员店，支持语音与图像购物。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你未来的购物很可能由 agent 代劳。这个框架给出了正确的默认设计：权限、限额、可追溯。你要学会在授权任何 agent 前，问这三件事。" },
+            { "k": "今天就能做的动作", "v": "给你的手机支付设置一道硬限额（比如单笔 200 元），并给所有能花钱的 AI 工具一个单独的支付方式。物理约束比提示词可靠。" },
+            { "k": "我的判断", "v": "「agent 能花钱」是今年最重要的变化之一。权限设计的常识，比模型能力更影响你的钱包。" }
+          ]
+        },
+        {
+          "tag": "全球治理",
+          "title": "联合国「杀手机器人」谈判结束：没有禁令，只承诺 2028 年前「再谈谈」",
+          "summary": "近 100 国支持启动约束性谈判，美国、以色列、白俄罗斯、英国反对。",
+          "source": "Yahoo News",
+          "date": "2026-11-21",
+          "url": "https://www.yahoo.com/news/world/articles/un-talks-autonomous-killer-robots-060332325.html",
+          "details": [
+            { "k": "核心观点", "v": "为期一周的联合国《特定常规武器公约》会议在日内瓦结束：128 个缔约国只同意在 2028 年前「拟定」一份可能的自主武器协议，而没有启动近 100 国支持的约束性禁令谈判。美国、以色列、白俄罗斯与英国主导反对设定具体授权。Stop Killer Robots 等组织称结果是「最低共同标准」。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你将是第一批在「自主武器已存在但无规则」的世界里成年的人。这条不是让你焦虑，而是让你知道：技术跑在规则前面是常态，别把「会有规矩的」当成默认假设。" },
+            { "k": "今天就能做的动作", "v": "练习一个思考习惯：看到新技术时，问「如果它被滥用，谁负责」。这个问题在 AI 时代比「它能做什么」更重要。" },
+            { "k": "我的判断", "v": "治理的滞后不是意外，而是结构性的。个人能做的是：不要把自己的判断权外包给「反正有人管」。" }
+          ]
+        },
+        {
+          "tag": "创作伦理",
+          "title": "导演芬奇回应 AI 争议：「它存在，我们就不该用吗？」",
+          "summary": "当工具已经存在，创作者的分歧不在能不能用，而在用什么换什么。",
+          "source": "Deadline",
+          "date": "2026-11-21",
+          "url": "https://deadline.com/2026/11/david-fincher-defends-ai-cliff-booth-criticism-1237230711/",
+          "details": [
+            { "k": "核心观点", "v": "导演大卫·芬奇在 11 月 21 日《洛杉矶时报》采访中为自己在新片中疑似使用生成式 AI 辩护：早期放映后观众称 AI 使用「惊人到荒谬的程度」，芬奇回应「我不是卢德分子，所以我不恐惧未知」，并反问「它存在，我们就不该用吗？」他把 AI 工具比作绘画史上的新材料，视为创作的自由度。" },
+            { "k": "为什么对 18 岁的你重要", "v": "你会在未来十年反复遇到这个争论。芬奇的立场代表一派：工具中立、由创作者决定。但真正的分辨点不是「用不用」，而是「用了之后，你的判断力有没有被替代」。" },
+            { "k": "今天就能做的动作", "v": "为你的下一个作品定一条规则：哪些环节可以让 AI 参与，哪些必须是你的手（比如构思、结构、最终取舍）。写下来，别临时决定。" },
+            { "k": "我的判断", "v": "「能用」不等于「该用」。创作者的核心资产是判断，而不是产能。" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+;
+const GENERATED = { "time": "19:53:50", "at": "2026-11-22 19:53" };
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+$('#date').textContent = DATA.date || '';
+
+// 补发标记：不在 12:25~12:45 之间生成的，标出实际生成时间
+if (GENERATED && GENERATED.time) {
+  const hh = parseInt(GENERATED.time.slice(0, 2), 10);
+  const mm = parseInt(GENERATED.time.slice(3, 5), 10);
+  const onTime = (hh === 12 && mm >= 25 && mm <= 45);
+  if (!onTime) {
+    var el = $('#late');
+    el.style.display = '';
+    el.textContent = '补发 ' + GENERATED.time;
+  }
+}
+
+$('#action').textContent = DATA.action ? '👉 ' + DATA.action : '';
+
+const cleanName = (n) => n.replace(/^[A-Za-z]\s*区\s*·\s*/, '');
+const tabs = $('#tabs');
+const pane = $('#pane');
+
+function renderSection(i) {
+  const sec = DATA.sections[i];
+  pane.innerHTML = (sec.items || []).map((it) => `
+    <div class="card">
+      ${it.tag ? `<span class="chip">${esc(it.tag)}</span>` : ''}
+      <span class="t">${esc(it.title)}</span>
+      ${it.summary ? `<div class="sum">${esc(it.summary)}</div>` : ''}
+      <div class="meta">
+        ${esc(it.source)} · ${esc(it.date)}
+        ${it.url ? ` <a href="${esc(it.url)}" target="_blank" rel="noreferrer">原文 ↗</a>` : ''}
+      </div>
+      <details>
+        <summary>结构化整理</summary>
+        ${(it.details || []).map((d) => `
+          <div class="k">${esc(d.k)}</div>
+          <div class="v">${esc(d.v)}</div>`).join('')}
+        ${it.url ? `<div class="k"><a href="${esc(it.url)}" target="_blank" rel="noreferrer">打开原文阅读 →</a></div>` : ''}
+      </details>
+    </div>`).join('');
+  [...tabs.children].forEach((el, j) => el.classList.toggle('active', i === j));
+  pane.scrollTop = 0;
+}
+
+(DATA.sections || []).forEach((sec, i) => {
+  const el = document.createElement('div');
+  el.className = 'tab';
+  el.textContent = cleanName(sec.name);
+  el.onclick = () => renderSection(i);
+  tabs.appendChild(el);
+});
+if (DATA.sections && DATA.sections.length) renderSection(0);
+
+function shut() {
+  window.open('', '_self');
+  window.close();
+  setTimeout(shut, 200);
+}
+$('#close').onclick = shut;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') shut();
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const cur = [...tabs.children].findIndex(x => x.classList.contains('active'));
+    const next = e.key === 'ArrowRight' ? cur + 1 : cur - 1;
+    if (next >= 0 && next < tabs.children.length) renderSection(next);
+  }
+});
+</script>
+</body>
+</html>
